@@ -1,0 +1,68 @@
+{
+  "Routes": [
+    // Door Web API
+    {
+      "UpstreamPathTemplate": "/api/Door",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7246
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Door"
+    },
+    {
+      "UpstreamPathTemplate": "/api/Door/{id}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7146
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Door/{id}"
+    },
+    // User Web API
+    {
+      "UpstreamPathTemplate": "/api/Authenticator",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7248
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Authenticator",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "admin"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Authenticator",
+      "UpstreamHttpMethod": [ "Post" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7248
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Authenticator"
+    }
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl":  "https://localhost:8000"
+  }
+}
