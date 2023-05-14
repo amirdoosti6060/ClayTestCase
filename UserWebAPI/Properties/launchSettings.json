@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -11,18 +11,24 @@
   "profiles": {
     "UserWebAPI": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "api/Authenticator",
-      "applicationUrl": "https://localhost:7248;http://localhost:5248",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_ENVIRONMENT": "Development",
+
+        "ConnectionString_MariaDB": "Server=localhost; Port=3306; Database=ClayUser;User=root;Password=admin;",
+
+        "JwtSettings_Key": "ahKJhYE@Jj19hh6156771jGJkjsuiqkjwhqwqweqweuqwklk",
+        "JwtSettings_AccessTokenValidityInMinute": "120",
+        "JwtSettings_Issuer": "https://localhost:7248",
+        "JwtSettings_Audience": "https://localhost:7248"
+      },
+      "applicationUrl": "https://localhost:7248;http://localhost:5248",
+      "dotnetRunMessages": true
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

@@ -16,7 +16,7 @@ namespace UserWebAPI.Services
 
         public AuthenticatorService(UserDbContext dbContext, IOptions<JwtSettings> jwtSettings)
         {
-             _dbContext = dbContext;
+            _dbContext = dbContext;
             _jwtSettings = jwtSettings.Value;
         }
 
@@ -53,9 +53,9 @@ namespace UserWebAPI.Services
 
         private string GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.JwtSettings_Key!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            int.TryParse(_jwtSettings.AccessTokenValidityInMinute, out int validityInMinute);
+            int.TryParse(_jwtSettings.JwtSettings_AccessTokenValidityInMinute, out int validityInMinute);
 
             var claims = new[]
             {
@@ -67,8 +67,8 @@ namespace UserWebAPI.Services
             };
 
             var token = new JwtSecurityToken(
-                _jwtSettings.Issuer,
-                _jwtSettings.Audience,
+                _jwtSettings.JwtSettings_Issuer,
+                _jwtSettings.JwtSettings_Audience,
                 claims,
                 expires: DateTime.Now.AddMinutes(validityInMinute),
                 signingCredentials: credentials);

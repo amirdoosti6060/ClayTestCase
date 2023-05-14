@@ -13,6 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+// Read environment variables
+builder.Host.ConfigureHostConfiguration(config =>
+{
+    config.AddEnvironmentVariables();
+});
+
+// Read JwtSettings from environment
+builder.Services.Configure<JwtSettings>(builder.Configuration);
+
+/*
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -22,23 +32,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+            ValidIssuer = builder.Configuration["JwtSettings_Issuer"], 
+            ValidAudience = builder.Configuration["JwtSettings_Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings_Key"]!))
         };
-    });
+    });*/
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MariaDB");
+    var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
     options.UseMySql(
         connectionString,
         ServerVersion.AutoDetect(connectionString)
         );
 });
-
-builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddTransient<IAuthenticatorService,AuthenticatorService>();
 builder.Services.AddTransient<IUserService, UserService>();
