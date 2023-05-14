@@ -16,7 +16,9 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7246;http://localhost:5246",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+
+        "ConnectionString_MariaDB": "Server=localhost; Port=3306; Database=ClayDoor;User=root;Password=admin;"
       }
     },
     "IIS Express": {

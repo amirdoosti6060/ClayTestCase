@@ -1,10 +1,7 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Net;
-using System.Text;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
 using UserWebAPI.Services;
@@ -41,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddControllers();
 builder.Services.AddDbContext<UserDbContext>(options =>
 {
+    //var connectionString = builder.Configuration.GetConnectionString("MariaDB");
     var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
     options.UseMySql(
         connectionString,
