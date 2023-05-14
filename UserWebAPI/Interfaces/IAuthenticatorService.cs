@@ -4,6 +4,6 @@ namespace UserWebAPI.Interfaces
 {
     public interface IAuthenticatorService
     {
-        Task<LoginResponse> Login(LoginRequest loginRequest);
+        Task<GeneralResponse> Login(LoginRequest loginRequest);
     }
 }

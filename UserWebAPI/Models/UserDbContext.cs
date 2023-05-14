@@ -18,6 +18,8 @@ namespace UserWebAPI.Models
         {
             modelBuilder.Entity<User>(entity => {
                 entity.ToTable("user");
+                entity.HasIndex(e => e.Email)
+                    .IsUnique();
 
                 entity.Property(e => e.Id)
                     .HasColumnName("id");
@@ -30,13 +32,13 @@ namespace UserWebAPI.Models
                     .HasColumnName("password")
                     .HasMaxLength(50);
 
+                entity.Property(e => e.FullName)
+                    .HasColumnName("fullname")
+                    .HasMaxLength(150);
+
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
                     .HasMaxLength(100);
-
-                entity.Property(e => e.State)
-                    .HasColumnName("state")
-                    .HasComment("0 = not activated, 1 = activated, 2 = disabled");
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")

@@ -28,6 +28,7 @@
       "DownstreamPathTemplate": "/api/Door/{id}"
     },
     // User Web API
+    // Authenticator
     {
       "UpstreamPathTemplate": "/api/Authenticator",
       "UpstreamHttpMethod": [ "Get" ],
@@ -44,7 +45,7 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
-        "Role": "admin"
+        "Role": "administrator, manager, user"
       }
     },
     {
@@ -59,6 +60,26 @@
         }
       ],
       "DownstreamPathTemplate": "/api/Authenticator"
+    },
+    // User
+    {
+      "UpstreamPathTemplate": "/api/User",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7248
+        }
+      ],
+      "DownstreamPathTemplate": "/api/User",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "administrator"
+      }
     }
 
   ],

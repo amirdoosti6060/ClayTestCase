@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
@@ -21,17 +20,26 @@ namespace UserWebAPI.Services
             _jwtSettings = jwtSettings.Value;
         }
 
-        public async Task<LoginResponse> Login(LoginRequest loginRequest)
+        public async Task<GeneralResponse> Login(LoginRequest loginRequest)
         {
-            LoginResponse loginResponse = new LoginResponse();
+            GeneralResponse response = new GeneralResponse()
+            {
+                ErrorCode = StatusCodes.Status200OK
+            };
 
             var user = await Authenticate(loginRequest);
 
             if (user != null)
             {
-                loginResponse.AccessToken = GenerateToken(user);
+                response.Data = GenerateToken(user);
             }
-            return loginResponse;
+            else
+            {
+                response.ErrorCode = StatusCodes.Status404NotFound;
+                response.ErrorMessage = $"User {loginRequest.Email} not found or password is not valid!";
+            }
+
+            return response;
         }
 
         private async Task<User?> Authenticate(LoginRequest loginRequest)
@@ -52,7 +60,7 @@ namespace UserWebAPI.Services
             var claims = new[]
             {
                 new Claim(ClaimTypes.Email, user.Email),
-                //new Claim(ClaimTypes.GivenName, user.Fullname),
+                new Claim(ClaimTypes.GivenName, user.FullName),
                 //new Claim(ClaimTypes.Role, user.Role),
                 new Claim("Role", user.Role),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())

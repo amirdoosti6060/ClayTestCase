@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserWebAPI.Interfaces;
+using UserWebAPI.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +10,72 @@ namespace UserWebAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         // GET: api/<UserController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var response = await _userService.GetAll();
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> Get(long id)
         {
-            return "value";
+            var response = await _userService.Get(id);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] AddUserRequest addUserRequest)
         {
+            User user = new User
+            {
+                Email = addUserRequest.Email,
+                Password = addUserRequest.Password,
+                FullName = addUserRequest.FullName,
+                Role = addUserRequest.Role
+            };
+
+            var response = await _userService.Add(user);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> Put(long id, [FromBody] UpdateUserRequest updateUserRequest)
         {
+            User user = new User
+            {
+                Email = updateUserRequest.Email,
+                Password = updateUserRequest.Password,
+                FullName = updateUserRequest.FullName,
+                Role = updateUserRequest.Role
+            };
+
+            var response = await _userService.Update(id, user);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
+            var response = await _userService.Delete(id);
+
+            return StatusCode((int) response.ErrorCode!, response);
         }
     }
 }

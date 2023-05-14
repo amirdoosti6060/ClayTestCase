@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
 
@@ -19,31 +18,25 @@ namespace UserWebAPI.Controllers
         }
 
         // GET: api/<AuthenticatorController>
-        //[Authorize]
         [HttpGet]
-        public string Get()
+        public GeneralResponse Get()
         {
-            return "healthy";
+            GeneralResponse response = new GeneralResponse
+            {
+                ErrorCode = StatusCodes.Status200OK,
+                Data = "healthy"
+            };
+
+            return response;
         }
 
         // POST api/<AuthenticatorController>
         [HttpPost]
         public async Task<ActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            /*
-            try
-            {
-            */
-                LoginResponse result = await _authenticatorService.Login(loginRequest);
+            GeneralResponse result = await _authenticatorService.Login(loginRequest);
 
-                return Ok(result);
-            /*
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            */
+            return StatusCode((int) result.ErrorCode!, result);
         }
     }
 }
