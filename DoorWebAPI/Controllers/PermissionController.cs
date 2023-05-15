@@ -66,13 +66,7 @@ namespace DoorWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddPermissionRequest addPermRequest)
         {
-            Permission perm = new Permission
-            {
-                DoorId = addPermRequest.DoorId,
-                Role = addPermRequest.Role
-            };
-
-            var response = await _permissionService.Add(perm);
+            var response = await _permissionService.Add(addPermRequest);
 
             return StatusCode((int)response.ErrorCode!, response);
         }

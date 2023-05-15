@@ -6,8 +6,8 @@ namespace UserWebAPI.Interfaces
     {
         Task<GeneralResponse> Get(long id);
         Task<GeneralResponse> GetAll();
-        Task<GeneralResponse> Add(User user);
-        Task<GeneralResponse> Update(long id, User user);
+        Task<GeneralResponse> Add(AddUserRequest addUserRequest);
+        Task<GeneralResponse> Update(long id, UpdateUserRequest updateUserRequest);
         Task<GeneralResponse> Delete(long id);
     }
 }

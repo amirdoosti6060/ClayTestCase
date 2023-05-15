@@ -26,6 +26,12 @@ namespace DoorWebAPI.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<string>("HardwareId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("hardwareId");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("modifiedAt");
@@ -35,10 +41,6 @@ namespace DoorWebAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
-
-                    b.Property<byte>("State")
-                        .HasColumnType("tinyint unsigned")
-                        .HasColumnName("state");
 
                     b.HasKey("Id");
 

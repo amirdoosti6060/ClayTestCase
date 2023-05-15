@@ -4,7 +4,7 @@ namespace DoorWebAPI.Models
 {
     public class DoorDbContext: DbContext
     {
-        public virtual DbSet<Door> DoorSet { get; set; } = null!;
+        public virtual DbSet<Door> Door { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
 
         public DoorDbContext(DbContextOptions<DoorDbContext> options): base (options)
@@ -28,8 +28,9 @@ namespace DoorWebAPI.Models
                     .HasColumnName("name")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.State)
-                    .HasColumnName("state");
+                entity.Property(e => e.HardwareId)
+                    .HasColumnName("hardwareId")
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.ModifiedAt)
                     .HasColumnName("modifiedAt");

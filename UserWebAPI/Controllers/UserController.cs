@@ -39,15 +39,7 @@ namespace UserWebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AddUserRequest addUserRequest)
         {
-            User user = new User
-            {
-                Email = addUserRequest.Email,
-                Password = addUserRequest.Password,
-                FullName = addUserRequest.FullName,
-                Role = addUserRequest.Role
-            };
-
-            var response = await _userService.Add(user);
+            var response = await _userService.Add(addUserRequest);
 
             return StatusCode((int)response.ErrorCode!, response);
         }
@@ -56,15 +48,7 @@ namespace UserWebAPI.Controllers
         [HttpPut("{id:long}")]
         public async Task<IActionResult> Put(long id, [FromBody] UpdateUserRequest updateUserRequest)
         {
-            User user = new User
-            {
-                Email = updateUserRequest.Email,
-                Password = updateUserRequest.Password,
-                FullName = updateUserRequest.FullName,
-                Role = updateUserRequest.Role
-            };
-
-            var response = await _userService.Update(id, user);
+            var response = await _userService.Update(id, updateUserRequest);
 
             return StatusCode((int)response.ErrorCode!, response);
         }

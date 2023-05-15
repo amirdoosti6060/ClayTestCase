@@ -109,11 +109,17 @@ namespace DoorWebAPI.Services
             return response;
         }
 
-        public async Task<GeneralResponse> Add(Permission perm)
+        public async Task<GeneralResponse> Add(AddPermissionRequest addPermRequest)
         {
             GeneralResponse response = new GeneralResponse()
             {
                 ErrorCode = StatusCodes.Status200OK
+            };
+
+            Permission perm = new Permission
+            {
+                DoorId = addPermRequest.DoorId,
+                Role = addPermRequest.Role
             };
 
             var permission = await _dbContext.Permissions

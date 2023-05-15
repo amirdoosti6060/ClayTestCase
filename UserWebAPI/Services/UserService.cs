@@ -49,11 +49,19 @@ namespace UserWebAPI.Services
             return response;
         }
 
-        public async Task<GeneralResponse> Add(User user)
+        public async Task<GeneralResponse> Add(AddUserRequest addUserRequest)
         {
             GeneralResponse response = new GeneralResponse()
             {
                 ErrorCode = StatusCodes.Status200OK
+            };
+
+            User user = new User
+            {
+                Email = addUserRequest.Email,
+                Password = addUserRequest.Password,
+                FullName = addUserRequest.FullName,
+                Role = addUserRequest.Role
             };
 
             _dbContext.Users.Add(user);
@@ -68,7 +76,7 @@ namespace UserWebAPI.Services
             return response;
         }
 
-        public async Task<GeneralResponse> Update(long id, User user)
+        public async Task<GeneralResponse> Update(long id, UpdateUserRequest updateUserRequest)
         {
             int nupdate = 0;
             GeneralResponse response = new GeneralResponse()
@@ -76,7 +84,10 @@ namespace UserWebAPI.Services
                 ErrorCode = StatusCodes.Status200OK
             };
 
-            var foundUser = await _dbContext.Users.Where(e => e.Id == id).FirstOrDefaultAsync();
+            var foundUser = await _dbContext.Users
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
             if (foundUser == null)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
@@ -84,10 +95,10 @@ namespace UserWebAPI.Services
             }
             else
             { 
-                foundUser.Email = user.Email;
-                foundUser.Password = user.Password;
-                foundUser.FullName = user.FullName;
-                foundUser.Role = user.Role;
+                foundUser.Email = updateUserRequest.Email;
+                foundUser.Password = updateUserRequest.Password;
+                foundUser.FullName = updateUserRequest.FullName;
+                foundUser.Role = updateUserRequest.Role;
 
                 _dbContext.Users.Update(foundUser);
                 nupdate = await _dbContext.SaveChangesAsync();
@@ -111,7 +122,10 @@ namespace UserWebAPI.Services
                 ErrorCode = StatusCodes.Status200OK
             };
 
-            var user = await _dbContext.Users.Where(e => e.Id == id).FirstOrDefaultAsync();
+            var user = await _dbContext.Users
+                .Where(e => e.Id == id)
+                .FirstOrDefaultAsync();
+
             if (user == null)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;

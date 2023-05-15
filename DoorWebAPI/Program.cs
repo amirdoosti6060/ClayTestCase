@@ -1,10 +1,14 @@
 using DoorWebAPI.Interfaces;
 using DoorWebAPI.Models;
 using DoorWebAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using RabbitMQServiceLib;
 using System.Net;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +20,21 @@ builder.Host.ConfigureHostConfiguration(config =>
     config.AddEnvironmentVariables();
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+        };
+    });
+
 builder.Services.AddDbContext<DoorDbContext>(options =>
 {
     //var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
@@ -25,6 +44,14 @@ builder.Services.AddDbContext<DoorDbContext>(options =>
         ServerVersion.AutoDetect(connectionString)
         );
 });
+
+builder.Services.AddSingleton(sp =>
+    new RabbitBusBuilder()
+        .HostName("localhost")
+        .UserName("guest")
+        .Password("guest")
+        .build()
+);
 
 builder.Services.AddTransient<IPermissionService, PermissionService>();
 builder.Services.AddTransient<IDoorService, DoorService>();
@@ -70,6 +97,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 //app.UseAuthorization();
 
 app.MapControllers();

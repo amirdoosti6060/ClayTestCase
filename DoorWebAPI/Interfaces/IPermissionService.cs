@@ -9,7 +9,7 @@ namespace DoorWebAPI.Interfaces
         Task<GeneralResponse> GetAll();
         Task<GeneralResponse> GetAllByDoor(long doorId);
         Task<GeneralResponse> GetAllByRole(string role);
-        Task<GeneralResponse> Add(Permission perm);
+        Task<GeneralResponse> Add(AddPermissionRequest addPermRequest);
         Task<GeneralResponse> Delete(long permId);
         Task<GeneralResponse> Delete(long doorId, string role);
     }

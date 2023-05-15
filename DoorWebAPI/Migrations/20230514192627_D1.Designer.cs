@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoorWebAPI.Migrations
 {
     [DbContext(typeof(DoorDbContext))]
-    [Migration("20230514140001_D1")]
+    [Migration("20230514192627_D1")]
     partial class D1
     {
         /// <inheritdoc />
@@ -29,6 +29,12 @@ namespace DoorWebAPI.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
+                    b.Property<string>("HardwareId")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("hardwareId");
+
                     b.Property<DateTime>("ModifiedAt")
                         .HasColumnType("datetime(6)")
                         .HasColumnName("modifiedAt");
@@ -38,10 +44,6 @@ namespace DoorWebAPI.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
-
-                    b.Property<byte>("State")
-                        .HasColumnType("tinyint unsigned")
-                        .HasColumnName("state");
 
                     b.HasKey("Id");
 

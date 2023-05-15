@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DoorWebAPI.Interfaces;
+using DoorWebAPI.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,87 @@ namespace DoorWebAPI.Controllers
     [ApiController]
     public class DoorController : ControllerBase
     {
+        private readonly IDoorService _doorService;
+
+        public DoorController(IDoorService doorService)
+        {
+            _doorService = doorService;
+        }
+
         // GET: api/<DoorController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var response = await _doorService.GetAll();
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // GET api/<DoorController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{doorid:long}")]
+        public async Task<IActionResult> Get(long doorid)
         {
-            return "value";
+            var response = await _doorService.Get(doorid);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // POST api/<DoorController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] AddUpdateDoorRequest addUpdateDoorRequest)
         {
+            var response = await _doorService.Add(addUpdateDoorRequest);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // PUT api/<DoorController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id:long}")]
+        public async Task<IActionResult> Put(long id, [FromBody] AddUpdateDoorRequest addUpdateUserRequest)
         {
+            var response = await _doorService.Update(id, addUpdateUserRequest);
+
+            return StatusCode((int)response.ErrorCode!, response);
         }
 
         // DELETE api/<DoorController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{id:long}")]
+        public async Task<IActionResult> Delete(long id)
         {
+            var response = await _doorService.Delete(id);
+
+            return StatusCode((int)response.ErrorCode!, response);
+        }
+        
+        // POST api/<DoorController>
+        [HttpGet("Unlock/{doorid:long}")]
+        public async Task<IActionResult> Unlock(long doorid)
+        {
+            UserInfo? userInfo = GetCurrentUserInfo(HttpContext);
+
+            var response = await _doorService.Unlock(userInfo, doorid);
+
+            return StatusCode((int)response.ErrorCode!, response);
+        }
+        
+        private UserInfo? GetCurrentUserInfo(HttpContext httpContext)
+        {
+            var identity = httpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new UserInfo
+                {
+                    Id = Convert.ToInt64(userClaims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value),
+                    Email = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value!,
+                    FullName = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.GivenName)?.Value!,
+                    Role = userClaims.FirstOrDefault(o => o.Type == "Role")?.Value!
+                };
+            }
+
+            return null;
         }
     }
 }
