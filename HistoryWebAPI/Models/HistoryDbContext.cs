@@ -4,7 +4,7 @@ namespace HistoryWebAPI.Models
 {
     public class HistoryDbContext: DbContext
     {
-        DbSet<History> History { get; set; } = null!;
+        public DbSet<History> History { get; set; } = null!;
 
         public HistoryDbContext(DbContextOptions<HistoryDbContext> options): base(options)
         {

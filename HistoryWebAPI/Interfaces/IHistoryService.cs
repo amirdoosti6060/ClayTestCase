@@ -1,4 +1,6 @@
-﻿namespace HistoryWebAPI.Interfaces
+﻿using HistoryWebAPI.Models;
+
+namespace HistoryWebAPI.Interfaces
 {
     public interface IHistoryService
     {
@@ -6,6 +8,6 @@
         Task<GeneralResponse> GetByUserId(long userId);
         Task<GeneralResponse> GetByDoorId(long doorId);
         Task<GeneralResponse> GetByRole(string role);
-        Task<GeneralResponse> Add(AddHistoryRequest addHistoryRequest);
+        Task Add(DoorUnlockInfo doorLockInfo);
     }
 }

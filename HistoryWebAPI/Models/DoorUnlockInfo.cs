@@ -1,4 +1,4 @@
-﻿namespace HistoryWebAPI.Controllers
+﻿namespace HistoryWebAPI.Models
 {
     public class DoorUnlockInfo
     {

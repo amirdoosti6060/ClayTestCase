@@ -1,5 +1,6 @@
 ﻿using DoorWebAPI.Interfaces;
 using DoorWebAPI.Models;
+using HistoryWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQServiceLib;
 
@@ -166,7 +167,7 @@ namespace DoorWebAPI.Services
             return door;
         }
 
-        public async Task<GeneralResponse> Unlock(UserInfo userInfo, long doorId)
+        public async Task<GeneralResponse> Unlock(UserInfo? userInfo, long doorId)
         {
             GeneralResponse response = new GeneralResponse()
             {
@@ -176,7 +177,7 @@ namespace DoorWebAPI.Services
 
             Door? door = await GetDoorInfo(doorId);
 
-            if (!await UserAuthorized(userInfo, doorId))
+            if (!await UserAuthorized(userInfo!, doorId))
             {
                 response.ErrorCode = StatusCodes.Status401Unauthorized;
                 response.ErrorMessage = $"User {userInfo.Email} with role {userInfo.Role} is not authorized to unlock door {doorId}";
@@ -184,7 +185,30 @@ namespace DoorWebAPI.Services
             }
             else
             {
-                status = "Ok";
+                LockHardware lockHw = new LockHardware();
+                CancellationTokenSource tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(1500));
+                CancellationToken token = tokenSource.Token;
+                try
+                {
+                    status = await lockHw.UnLock(door!.HardwareId, token);
+                    switch (status)
+                    {
+                        case "Timeout":
+                            response.ErrorCode = StatusCodes.Status408RequestTimeout;
+                            response.ErrorMessage = $"Door {doorId} didn't respond!";
+                            break;
+                        case "Fail":
+                            response.ErrorCode = StatusCodes.Status406NotAcceptable;
+                            response.ErrorMessage = $"Door {doorId} didn't respond!";
+                            break;
+                    }
+                } 
+                catch
+                {
+                    status = "Timeout";
+                    response.ErrorCode = StatusCodes.Status408RequestTimeout;
+                    response.ErrorMessage = $"Door {doorId} didn't respond!";
+                }
             }
 
             DoorUnlockInfo doorUnlockInfo = new DoorUnlockInfo

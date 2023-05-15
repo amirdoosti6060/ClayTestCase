@@ -1,12 +1,14 @@
+using HistoryWebAPI.Interfaces;
 using HistoryWebAPI.Models;
 using HistoryWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using RabbitMQServiceLib;
-using System.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddTransient<IHistoryService, HistoryService>();
 
 builder.Services.AddSingleton(sp => 
     new RabbitBusBuilder()

@@ -34,7 +34,7 @@ namespace RabbitMQServiceLib
                     Encoding.UTF8.GetBytes(output));
             });
         }
-        public async Task ReceiveAsync<T>(string queue, Action<T> onMessage)
+        public async Task ReceiveAsync<T>(string queue, Func<T, Task> onMessage)
         {
             _channel.QueueDeclare(
                 queue: queue,
@@ -49,8 +49,7 @@ namespace RabbitMQServiceLib
             {
                 var jsonSpecified = Encoding.UTF8.GetString(e.Body.Span);
                 var item = JsonConvert.DeserializeObject<T>(jsonSpecified);
-                onMessage(item!);
-                await Task.Yield();
+                await onMessage(item!);
             };
             _channel.BasicConsume(queue, true, consumer);
             await Task.Yield();
