@@ -40,7 +40,7 @@ namespace UserWebAPI.Services
 
             response.Data = await _dbContext.Users.ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<User>)!.Count == 0)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
                 response.ErrorMessage = "No user found!";
@@ -65,20 +65,14 @@ namespace UserWebAPI.Services
             };
 
             _dbContext.Users.Add(user);
-            if (await _dbContext.SaveChangesAsync() <= 0)
-            {
-                response.ErrorCode = StatusCodes.Status400BadRequest;
-                response.ErrorMessage = $"Unable to add user!";
-            }
-            else
-                response.Data = user.Id;
+            await _dbContext.SaveChangesAsync();
+            response.Data = user.Id;
 
             return response;
         }
 
         public async Task<GeneralResponse> Update(long id, UpdateUserRequest updateUserRequest)
         {
-            int nupdate = 0;
             GeneralResponse response = new GeneralResponse()
             {
                 ErrorCode = StatusCodes.Status200OK
@@ -101,15 +95,8 @@ namespace UserWebAPI.Services
                 foundUser.Role = updateUserRequest.Role;
 
                 _dbContext.Users.Update(foundUser);
-                nupdate = await _dbContext.SaveChangesAsync();
-
-                if (nupdate <= 0)
-                {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to update user {id} !";
-                }
-                else
-                    response.Data = id;
+                await _dbContext.SaveChangesAsync();
+                response.Data = id;
             }
 
             return response;
@@ -134,14 +121,8 @@ namespace UserWebAPI.Services
             else
             {
                 _dbContext.Users.Remove(user);
-                var nupdate = await _dbContext.SaveChangesAsync();
-                if (nupdate <= 0)
-                {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to delete user {id}";
-                }
-                else
-                    response.Data = id;
+                await _dbContext.SaveChangesAsync();
+                response.Data = id;
             }
 
             return response;

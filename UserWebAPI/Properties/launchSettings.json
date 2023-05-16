@@ -12,16 +12,14 @@
     "UserWebAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/Authenticator",
+      "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-
-        "ConnectionString_MariaDB": "Server=localhost; Port=3306; Database=ClayUser;User=root;Password=admin;",
-
         "JwtSettings_Key": "ahKJhYE@Jj19hh6156771jGJkjsuiqkjwhqwqweqweuqwklk",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "JwtSettings_Audience": "https://localhost:7248",
         "JwtSettings_AccessTokenValidityInMinute": "120",
-        "JwtSettings_Issuer": "https://localhost:7248",
-        "JwtSettings_Audience": "https://localhost:7248"
+        "ConnectionString_MariaDB": "Server=localhost; Port=3306; Database=ClayUser;User=root;Password=admin;",
+        "JwtSettings_Issuer": "https://localhost:7248"
       },
       "applicationUrl": "https://localhost:7248;http://localhost:5248",
       "dotnetRunMessages": true
@@ -32,6 +30,13 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

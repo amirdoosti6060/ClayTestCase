@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGateway", "ApiGateway\Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserWebAPI", "UserWebAPI\UserWebAPI.csproj", "{B5374EE7-C422-42DC-A212-8BFB45ACB6E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HistoryWebAPI", "HistoryWebAPI\HistoryWebAPI.csproj", "{681463E0-C046-493A-9CFF-93D10CA558D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HistoryWebAPI", "HistoryWebAPI\HistoryWebAPI.csproj", "{681463E0-C046-493A-9CFF-93D10CA558D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RabbitMQServiceLib", "RabbitMQService\RabbitMQServiceLib.csproj", "{9385B240-CA55-429F-8796-BA4A89AC16A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQServiceLib", "RabbitMQService\RabbitMQServiceLib.csproj", "{9385B240-CA55-429F-8796-BA4A89AC16A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserWebAPI.Test", "UserWebAPI.Test\UserWebAPI.Test.csproj", "{AE124290-BACF-44FD-B2EC-C624D25DDF37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HistoryWebAPI.Test", "HistoryWebAPI.Test\HistoryWebAPI.Test.csproj", "{991E18E3-58F9-4FCD-B04B-8AB178522C2D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{9385B240-CA55-429F-8796-BA4A89AC16A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9385B240-CA55-429F-8796-BA4A89AC16A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9385B240-CA55-429F-8796-BA4A89AC16A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE124290-BACF-44FD-B2EC-C624D25DDF37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE124290-BACF-44FD-B2EC-C624D25DDF37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE124290-BACF-44FD-B2EC-C624D25DDF37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE124290-BACF-44FD-B2EC-C624D25DDF37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

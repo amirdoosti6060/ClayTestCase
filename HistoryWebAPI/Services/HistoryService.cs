@@ -25,7 +25,7 @@ namespace HistoryWebAPI.Services
                                 .Where(e => e.TimeStamp.Date.Equals(selDate.Date))
                                 .ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<History>)!.Count == 0)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
                 response.ErrorMessage = $"Requested history for date {year}/{month}/{day} not found!";
@@ -45,7 +45,7 @@ namespace HistoryWebAPI.Services
                                 .Where(e => e.DoorId == doorId)
                                 .ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<History>)!.Count == 0)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
                 response.ErrorMessage = $"Requested history for door {doorId} not found!";
@@ -65,7 +65,7 @@ namespace HistoryWebAPI.Services
                                 .Where(e => e.Role == role)
                                 .ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<History>)!.Count == 0)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
                 response.ErrorMessage = $"Requested history for role {role} not found!";
@@ -85,7 +85,7 @@ namespace HistoryWebAPI.Services
                                 .Where(e => e.UserId == userId)
                                 .ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<History>)!.Count == 0)
             {
                 response.ErrorCode = StatusCodes.Status404NotFound;
                 response.ErrorMessage = $"Requested history for user {userId} not found!";
@@ -96,11 +96,6 @@ namespace HistoryWebAPI.Services
 
         public async Task Add(DoorUnlockInfo doorLockInfo)
         {
-            GeneralResponse response = new GeneralResponse()
-            {
-                ErrorCode = StatusCodes.Status200OK
-            };
-
             History history = new History
             {
                 DoorId = doorLockInfo.DoorId,
@@ -115,15 +110,7 @@ namespace HistoryWebAPI.Services
             };
 
             _dbContext.History.Add(history);
-            if (await _dbContext.SaveChangesAsync() <= 0)
-            {
-                response.ErrorCode = StatusCodes.Status400BadRequest;
-                response.ErrorMessage = $"Unable to add history!";
-            }
-            else
-                response.Data = history.Id;
-
-            //return response;
+            await _dbContext.SaveChangesAsync();
         }
     }
 }
