@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HistoryWebAPI.Migrations
 {
     [DbContext(typeof(HistoryDbContext))]
-    [Migration("20230515140847_H1")]
+    [Migration("20230518084644_H1")]
     partial class H1
     {
         /// <inheritdoc />

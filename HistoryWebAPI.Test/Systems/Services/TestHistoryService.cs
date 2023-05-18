@@ -3,7 +3,8 @@ using HistoryWebAPI.Services;
 using HistoryWebAPI.Test.MockData;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Logging;
+using Moq;
 
 namespace HistoryWebAPI.Test.Systems.Services
 {
@@ -19,8 +20,9 @@ namespace HistoryWebAPI.Test.Systems.Services
                                 .Options;
             _dbContext = new HistoryDbContext(options);
             _dbContext.Database.EnsureCreated();
+            var moqLoggerHistoryService = new Mock<ILogger<HistoryService>>();
 
-            _historyService = new HistoryService(_dbContext);
+            _historyService = new HistoryService(_dbContext, moqLoggerHistoryService.Object);
         }
 
         public void Dispose()
@@ -30,153 +32,177 @@ namespace HistoryWebAPI.Test.Systems.Services
         }
 
         [Fact]
-        public async Task GetByDate_Success()
+        public async Task Get_ByUserId_Success()
         {
             //Arrange
-            DateTime dt = DateTime.Now;
-            await _dbContext.History.AddRangeAsync(HistoryMockData.GetHistories());
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByDate(dt.Year, dt.Month, dt.Day);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
-        }
-
-        [Theory]
-        [InlineData(10, 10, 10)]
-        public async Task GetByDate_NotFound(int year, int month, int day)
-        {
-            //Arrange
-            await _dbContext.History.AddRangeAsync(HistoryMockData.GetHistories());
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByDate(year, month, day);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
-            Assert.NotNull(resp.ErrorMessage);
-        }
-
-        [Fact]
-        public async Task GetByDoorId_Success()
-        {
-            //Arrange
-            DateTime dt = DateTime.Now;
             var histories = HistoryMockData.GetHistories();
             await _dbContext.History.AddRangeAsync(histories);
             await _dbContext.SaveChangesAsync();
 
-            //Act
-            var resp = await _historyService.GetByDoorId(histories[0].DoorId);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        public async Task GetByDoorId_NotFound(long doorId)
-        {
-            //Arrange
-            await _dbContext.History.AddRangeAsync(HistoryMockData.GetHistories());
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByDoorId(doorId);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
-        }
-
-        [Fact]
-        public async Task GetByRole_Success()
-        {
-            //Arrange
-            DateTime dt = DateTime.Now;
-            var histories = HistoryMockData.GetHistories();
-            await _dbContext.History.AddRangeAsync(histories);
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByRole(histories[0].Role);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
-        }
-
-        [Theory]
-        [InlineData("NoRole")]
-        public async Task GetByRole_NotFound(string role)
-        {
-            //Arrange
-            await _dbContext.History.AddRangeAsync(HistoryMockData.GetHistories());
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByRole(role);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
-        }
-
-        [Fact]
-        public async Task GetByUserId_Success()
-        {
-            //Arrange
-            DateTime dt = DateTime.Now;
-            var histories = HistoryMockData.GetHistories();
-            await _dbContext.History.AddRangeAsync(histories);
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByUserId(histories[0].UserId);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
-        }
-
-        [Theory]
-        [InlineData(0)]
-        public async Task GetByUserId_NotFound(long userId)
-        {
-            //Arrange
-            await _dbContext.History.AddRangeAsync(HistoryMockData.GetHistories());
-            await _dbContext.SaveChangesAsync();
-
-            //Act
-            var resp = await _historyService.GetByUserId(userId);
-
-            //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
-        }
-
-        [Fact]
-        public async Task Add_Success()
-        {
-            //Arrange
-            var histories = HistoryMockData.GetHistories();
-
-            var doorLockInfo = new DoorUnlockInfo
+            HistoryRequest historyRequest = new HistoryRequest
             {
-               DoorId = histories[0].DoorId,
-               DoorName = histories[0].DoorName,
-               HardwareId = histories[0].HardwareId,
-               UserId = histories[0].UserId,
-               Email = histories[0].Email,
-               FullName = histories[0].FullName,
-               Role = histories[0].Role,
-               ActionStatus = histories[0].ActionStatus,
-               TimeStamp = histories[0].TimeStamp
+                userId = histories[0].UserId
             };
 
             //Act
-            await _historyService.Add(doorLockInfo);
+            var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.True(true);
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+        }
+
+        [Fact]
+        public async Task Get_ByDoorId_Success()
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                doorId = histories[0].DoorId
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+        }
+
+        [Fact]
+        public async Task Get_ByRole_Success()
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                role = histories[0].Role
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+        }
+
+        [Fact]
+        public async Task Get_ByDate_Success()
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                year = histories[0].TimeStamp.Year,
+                month = histories[0].TimeStamp.Month,
+                day = histories[0].TimeStamp.Day
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.True((resp.Data as List<History>)!.Count > 0);
+        }
+
+        [Theory]
+        [InlineData(2)]
+        public async Task Get_ByDate_and_Top_Success(int _top)
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                year = histories[0].TimeStamp.Year,
+                month = histories[0].TimeStamp.Month,
+                day = histories[0].TimeStamp.Day,
+                top = _top
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(_top, (resp.Data as List<History>)!.Count);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        public async Task Get_All_Success(int _top)
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                doorId = histories[0].DoorId,
+                userId = histories[0].UserId,
+                year = histories[0].TimeStamp.Year,
+                month = histories[0].TimeStamp.Month,
+                day = histories[0].TimeStamp.Day,
+                role = histories[0].Role,
+                top = _top
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(_top, (resp.Data as List<History>)!.Count);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        public async Task Get_NotFound(long _doorId)
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest
+            {
+                doorId = _doorId
+            };
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+        }
+
+        [Fact]
+        public async Task Get_BadRequest()
+        {
+            //Arrange
+            var histories = HistoryMockData.GetHistories();
+            await _dbContext.History.AddRangeAsync(histories);
+            await _dbContext.SaveChangesAsync();
+
+            HistoryRequest historyRequest = new HistoryRequest();
+
+            //Act
+            var resp = await _historyService.Get(historyRequest);
+
+            //Assert
+            Assert.Equal(StatusCodes.Status400BadRequest, resp.ErrorCode);
         }
     }
 }

@@ -1,99 +1,86 @@
 ﻿using HistoryWebAPI.Interfaces;
 using HistoryWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace HistoryWebAPI.Services
 {
     public class HistoryService : IHistoryService
     {
         private readonly HistoryDbContext _dbContext;
+        private readonly ILogger<HistoryService> _logger;
 
-        public HistoryService(HistoryDbContext dbContext)
+        public HistoryService(HistoryDbContext dbContext, ILogger<HistoryService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
-        public async Task<GeneralResponse> GetByDate(int year, int month, int day)
+        private string GetOperator(string? str)
+        {
+            return string.IsNullOrEmpty(str) ? "": " AND ";
+        }
+
+        private string BuildQuery(HistoryRequest historyRequest)
+        {
+            string qry = "";
+            if (historyRequest.userId != null)
+                qry += $"userId = {historyRequest.userId}";
+            if (historyRequest.doorId != null)
+                qry += GetOperator(qry) + $"doorId = {historyRequest.doorId}";
+            if (!string.IsNullOrEmpty(historyRequest.role))
+                qry += GetOperator(qry) + $"role = \"{historyRequest.role}\"";
+            if (historyRequest.year != null ||
+                historyRequest.month != null ||
+                historyRequest.day != null)
+            {
+                DateTime dt = DateTime.Now;
+                int yy = historyRequest.year ?? dt.Year;
+                int mm = historyRequest.month ?? dt.Month + 1;
+                int dd = historyRequest.day ?? dt.Day;
+                dt = new DateTime(yy, mm, dd);
+
+                qry += GetOperator(qry) + $"timestamp.Date = \"{dt}\"";
+            }
+
+            return qry;
+        }
+
+        public async Task<GeneralResponse> Get(HistoryRequest historyRequest)
         {
             GeneralResponse response = new GeneralResponse()
             {
                 ErrorCode = StatusCodes.Status200OK
             };
 
-            DateTime selDate = new DateTime(year, month, day);
-            response.Data = await _dbContext.History
-                                .Where(e => e.TimeStamp.Date.Equals(selDate.Date))
-                                .ToListAsync();
+            string qry = BuildQuery(historyRequest);
 
-            if ((response.Data as List<History>)!.Count == 0)
+            if (string.IsNullOrEmpty(qry))
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Requested history for date {year}/{month}/{day} not found!";
+                response.ErrorCode = StatusCodes.Status400BadRequest;
+                response.ErrorMessage = "Requested is not valid!";
             }
+            else
+            {
+                var querable = _dbContext.History.Where(qry);
+
+                if (historyRequest.top != null)
+                    querable = querable.Take(historyRequest.top ?? 0);
+
+                response.Data = await querable.ToListAsync();
+
+                if ((response.Data as List<History>)!.Count == 0)
+                {
+                    response.ErrorCode = StatusCodes.Status404NotFound;
+                    response.ErrorMessage = "Requested history not found!";
+                }
+            }
+
+            _logger.LogInformation("A query executed!");
 
             return response;
         }
-
-        public async Task<GeneralResponse> GetByDoorId(long doorId)
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                ErrorCode = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.History
-                                .Where(e => e.DoorId == doorId)
-                                .ToListAsync();
-
-            if ((response.Data as List<History>)!.Count == 0)
-            {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Requested history for door {doorId} not found!";
-            }
-
-            return response;
-        }
-
-        public async Task<GeneralResponse> GetByRole(string role)
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                ErrorCode = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.History
-                                .Where(e => e.Role == role)
-                                .ToListAsync();
-
-            if ((response.Data as List<History>)!.Count == 0)
-            {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Requested history for role {role} not found!";
-            }
-
-            return response;
-        }
-
-        public async Task<GeneralResponse> GetByUserId(long userId)
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                ErrorCode = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.History
-                                .Where(e => e.UserId == userId)
-                                .ToListAsync();
-
-            if ((response.Data as List<History>)!.Count == 0)
-            {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Requested history for user {userId} not found!";
-            }
-
-            return response;
-        }
-
+        
         public async Task Add(DoorUnlockInfo doorLockInfo)
         {
             History history = new History
@@ -111,6 +98,8 @@ namespace HistoryWebAPI.Services
 
             _dbContext.History.Add(history);
             await _dbContext.SaveChangesAsync();
+            
+            _logger.LogInformation("A history added");
         }
     }
 }

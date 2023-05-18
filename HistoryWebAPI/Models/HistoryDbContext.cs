@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HistoryWebAPI.Models
 {
@@ -16,6 +17,7 @@ namespace HistoryWebAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Database.SetInitializer<HistoryDbContext>(null);
             modelBuilder.Entity<History>(entity =>
             {
                 entity.ToTable("history");

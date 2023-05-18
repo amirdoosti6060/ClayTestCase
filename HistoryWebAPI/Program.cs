@@ -2,49 +2,30 @@ using HistoryWebAPI.Interfaces;
 using HistoryWebAPI.Models;
 using HistoryWebAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 using RabbitMQServiceLib;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.AddEnvironmentVariables();
 
+// Add services to the container.
 builder.Services.AddTransient<IHistoryService, HistoryService>();
 
 builder.Services.AddSingleton(sp => 
     new RabbitBusBuilder()
-        .HostName("localhost")
-        .UserName("guest")
-        .Password("guest")
+        .HostName(builder.Configuration["RabbitMQ:Hostname"])
+        .UserName(builder.Configuration["RabbitMQ:Username"])
+        .Password(builder.Configuration["RabbitMQ:Password"])
         .build()
 );
 
 builder.Services.AddHostedService<RabbitListener>();
-/*
-builder.Services.AddSingleton<RabbitMQService>(provider =>
-{
-    string hostName = "localhost";
-    string userName = "guest";
-    string password = "guest";
-    return new RabbitMQService(hostName, userName, password);
-});
-
-builder.Services.AddHostedService<MessageHandler>(provider =>
-{
-    var rabbitMQService = provider.GetRequiredService<RabbitMQService>();
-    var requestQueue = "historyQueue";
-
-    return new MessageHandler(rabbitMQService, requestQueue);
-});
-*/
 
 builder.Services.AddDbContext<HistoryDbContext>(options =>
 {
-    //var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
-    var connectionString = builder.Configuration.GetConnectionString("MariaDB");
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-        );
+    var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
 builder.Services.AddControllers();
