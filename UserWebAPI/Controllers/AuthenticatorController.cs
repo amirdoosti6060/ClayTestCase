@@ -11,10 +11,13 @@ namespace UserWebAPI.Controllers
     public class AuthenticatorController : ControllerBase
     {
         private readonly IAuthenticatorService _authenticatorService;
+        private readonly ILogger<AuthenticatorController> _logger;
 
-        public AuthenticatorController(IAuthenticatorService authenticatorService)
+        public AuthenticatorController(IAuthenticatorService authenticatorService, 
+            ILogger<AuthenticatorController> logger)
         {
             _authenticatorService = authenticatorService;
+            _logger = logger;
         }
 
         // GET: api/<AuthenticatorController>

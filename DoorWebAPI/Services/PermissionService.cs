@@ -17,7 +17,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Permissions.Where(e => e.Id == id)
@@ -25,8 +25,8 @@ namespace DoorWebAPI.Services
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Permission {id} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Permission {id} not found!";
             }
 
             return response;
@@ -36,7 +36,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Permissions
@@ -45,8 +45,8 @@ namespace DoorWebAPI.Services
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Permission ({doorId},{role}) not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Permission ({doorId},{role}) not found!";
             }
 
             return response;
@@ -56,15 +56,15 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Permissions.ToListAsync();
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = "No permission found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = "No permission found!";
             }
 
             return response;
@@ -74,7 +74,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Permissions.Where(e => e.DoorId == doorId)
@@ -82,8 +82,8 @@ namespace DoorWebAPI.Services
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"No permission exists for door ID={doorId} !";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"No permission exists for door ID={doorId} !";
             }
 
             return response;
@@ -93,7 +93,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Permissions
@@ -102,8 +102,8 @@ namespace DoorWebAPI.Services
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"No permission exists for role={role} !";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"No permission exists for role={role} !";
             }
 
             return response;
@@ -113,7 +113,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             Permission perm = new Permission
@@ -127,16 +127,16 @@ namespace DoorWebAPI.Services
                 .FirstOrDefaultAsync();
             if (permission != null)
             {
-                response.ErrorCode = StatusCodes.Status400BadRequest;
-                response.ErrorMessage = $"Permission ({perm.DoorId},{perm.Role}) already exist!";
+                response.Code = StatusCodes.Status400BadRequest;
+                response.Message = $"Permission ({perm.DoorId},{perm.Role}) already exist!";
             }
             else
             {
                 _dbContext.Permissions.Add(perm);
                 if (await _dbContext.SaveChangesAsync() <= 0)
                 {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to add permission!";
+                    response.Code = StatusCodes.Status400BadRequest;
+                    response.Message = $"Unable to add permission!";
                 }
                 else
                     response.Data = perm.Id;
@@ -149,7 +149,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var permission = await _dbContext.Permissions
@@ -157,8 +157,8 @@ namespace DoorWebAPI.Services
                 .FirstOrDefaultAsync();
             if (permission == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Permission {permId} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Permission {permId} not found!";
             }
             else
             {
@@ -166,8 +166,8 @@ namespace DoorWebAPI.Services
                 var nupdate = await _dbContext.SaveChangesAsync();
                 if (nupdate <= 0)
                 {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to delete permission {permId}";
+                    response.Code = StatusCodes.Status400BadRequest;
+                    response.Message = $"Unable to delete permission {permId}";
                 }
                 else
                     response.Data = permId;
@@ -180,7 +180,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var permission = await _dbContext.Permissions
@@ -189,8 +189,8 @@ namespace DoorWebAPI.Services
 
             if (permission == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Permission ({doorId},{role}) not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Permission ({doorId},{role}) not found!";
             }
             else
             {
@@ -198,8 +198,8 @@ namespace DoorWebAPI.Services
                 var nupdate = await _dbContext.SaveChangesAsync();
                 if (nupdate <= 0)
                 {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to delete permission ({doorId},{role})";
+                    response.Code = StatusCodes.Status400BadRequest;
+                    response.Message = $"Unable to delete permission ({doorId},{role})";
                 }
                 else
                     response.Data = permission.Id;

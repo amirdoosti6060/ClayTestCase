@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,8 +29,11 @@ namespace UserWebAPI.Test.Systems.Controllers
             _dbContext = new UserDbContext(options);
             _dbContext.Database.EnsureCreated();
 
-            UserService userService = new UserService(_dbContext);
-            _userController = new UserController(userService);
+            var moqLoggerUserService = new Mock<ILogger<UserService>>();
+            var moqLoggerUserController = new Mock<ILogger<UserController>>();
+
+            UserService userService = new UserService(_dbContext, moqLoggerUserService.Object);
+            _userController = new UserController(userService, moqLoggerUserController.Object);
         }
 
         public void Dispose()

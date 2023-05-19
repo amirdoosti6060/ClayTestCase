@@ -23,7 +23,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.GetAll();
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET api/<PermissionController>/5
@@ -32,7 +32,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.Get(permid);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET api/<PermissionController>/1/administrator
@@ -41,7 +41,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.Get(doorid, role);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET: api/<PermissionController>/GetAllByDoor/1
@@ -50,7 +50,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.GetAllByDoor(doorid);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET: api/<PermissionController>/GetAllByRole/1
@@ -59,7 +59,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.GetAllByRole(role);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // POST api/<PermissionController>
@@ -68,7 +68,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.Add(addPermRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // DELETE api/<PermissionController>/5
@@ -77,7 +77,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.Delete(permid);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // DELETE api/<PermissionController>/1/user
@@ -86,7 +86,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _permissionService.Delete(doorid, role);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
     }
 }

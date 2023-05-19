@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 using System.Net;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
@@ -8,61 +10,43 @@ using UserWebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Read environment variables
-builder.Host.ConfigureHostConfiguration(config =>
+try
 {
-    config.AddEnvironmentVariables();
-});
+    builder.Configuration.AddEnvironmentVariables();
 
-// Read JwtSettings from environment
-builder.Services.Configure<JwtSettings>(builder.Configuration);
+    var logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(builder.Configuration)
+                    .CreateLogger();
+    builder.Logging.ClearProviders();
+    builder.Logging.AddSerilog(logger);
 
-/*
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    // Read JwtSettings from environment
+    builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+    builder.Services.AddControllers();
+
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddDbContext<UserDbContext>(options =>
     {
-        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JwtSettings_Issuer"], 
-            ValidAudience = builder.Configuration["JwtSettings_Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings_Key"]!))
-        };
-    });*/
+        var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
+        options.UseMySql(
+            connectionString,
+            ServerVersion.AutoDetect(connectionString)
+            );
+    });
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<UserDbContext>(options =>
+    builder.Services.AddTransient<IAuthenticatorService, AuthenticatorService>();
+    builder.Services.AddTransient<IUserService, UserService>();
+}
+catch (Exception ex)
 {
-    //var connectionString = builder.Configuration.GetConnectionString("MariaDB");
-    var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
-    options.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-        );
-});
-
-builder.Services.AddTransient<IAuthenticatorService,AuthenticatorService>();
-builder.Services.AddTransient<IUserService, UserService>();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Error(ex, "Initialization error.");
 }
 
-// Configure the HTTP request pipeline.
+var app = builder.Build();
 
 // Global Exception Handler Middleware
 app.UseExceptionHandler(errorApp =>
@@ -86,6 +70,15 @@ app.UseExceptionHandler(errorApp =>
         }
     });
 });
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+// Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 

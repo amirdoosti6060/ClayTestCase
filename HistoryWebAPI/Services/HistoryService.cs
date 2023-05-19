@@ -2,6 +2,7 @@
 using HistoryWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using Serilog;
 
 namespace HistoryWebAPI.Services
 {
@@ -36,11 +37,11 @@ namespace HistoryWebAPI.Services
             {
                 DateTime dt = DateTime.Now;
                 int yy = historyRequest.year ?? dt.Year;
-                int mm = historyRequest.month ?? dt.Month + 1;
+                int mm = historyRequest.month ?? dt.Month;
                 int dd = historyRequest.day ?? dt.Day;
                 dt = new DateTime(yy, mm, dd);
 
-                qry += GetOperator(qry) + $"timestamp.Date = \"{dt}\"";
+                qry += GetOperator(qry) + $"timestamp.Date = \"{yy}-{mm}-{dd}\"";
             }
 
             return qry;
@@ -76,7 +77,7 @@ namespace HistoryWebAPI.Services
                 }
             }
 
-            _logger.LogInformation("A query executed!");
+            _logger.LogDebug($"Generated query: {qry}!");
 
             return response;
         }
@@ -97,9 +98,9 @@ namespace HistoryWebAPI.Services
             };
 
             _dbContext.History.Add(history);
-            await _dbContext.SaveChangesAsync();
+            int n = await _dbContext.SaveChangesAsync();
             
-            _logger.LogInformation("A history added");
+            _logger.LogDebug($"A history added. return {n}");
         }
     }
 }

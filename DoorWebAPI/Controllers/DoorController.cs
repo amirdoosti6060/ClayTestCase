@@ -24,7 +24,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _doorService.GetAll();
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET api/<DoorController>/5
@@ -33,7 +33,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _doorService.Get(doorid);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // POST api/<DoorController>
@@ -42,7 +42,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _doorService.Add(addUpdateDoorRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // PUT api/<DoorController>/5
@@ -51,7 +51,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _doorService.Update(id, addUpdateUserRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // DELETE api/<DoorController>/5
@@ -60,7 +60,7 @@ namespace DoorWebAPI.Controllers
         {
             var response = await _doorService.Delete(id);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // POST api/<DoorController>
@@ -71,7 +71,7 @@ namespace DoorWebAPI.Controllers
 
             var response = await _doorService.Unlock(userInfo!, doorid);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
         
         private UserInfo? GetCurrentUserInfo(HttpContext httpContext)

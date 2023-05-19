@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +24,10 @@ namespace UserWebAPI.Test.Systems.Services
         {
             _jwtSettings = new JwtSettings
             {
-                JwtSettings_Key = "TestKeyForJwtTestKeyForJwtTestKeyForJwtTestKeyForJwtTestKeyForJwt",
-                JwtSettings_AccessTokenValidityInMinute = "120",
-                JwtSettings_Audience = "Audience",
-                JwtSettings_Issuer = "Issuer"
+                Key = "TestKeyForJwtTestKeyForJwtTestKeyForJwtTestKeyForJwtTestKeyForJwt",
+                AccessTokenValidityInMinute = "120",
+                Audience = "Audience",
+                Issuer = "Issuer"
             };
 
             var options = new DbContextOptionsBuilder<UserDbContext>()
@@ -34,7 +36,12 @@ namespace UserWebAPI.Test.Systems.Services
             _dbContext = new UserDbContext(options);
             _dbContext.Database.EnsureCreated();
 
-            _authenticatorService = new AuthenticatorService(_dbContext, Options.Create(_jwtSettings));
+            var moqLoggerService = new Mock<ILogger<AuthenticatorService>>();
+
+            _authenticatorService = new AuthenticatorService(
+                _dbContext, 
+                Options.Create(_jwtSettings),
+                moqLoggerService.Object);
         }
 
         public void Dispose()

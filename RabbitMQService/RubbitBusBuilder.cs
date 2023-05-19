@@ -14,6 +14,10 @@ namespace RabbitMQServiceLib
         private int _port = 0;
         private string _virtualHost = null!;
 
+        public RabbitBusBuilder()
+        {
+        }
+
         public RabbitBusBuilder HostName (string value)
         {
             _hostName = value;

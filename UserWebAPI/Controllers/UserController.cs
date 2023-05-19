@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Serilog;
+using Microsoft.AspNetCore.Mvc;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
 
@@ -11,10 +12,12 @@ namespace UserWebAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         // GET: api/<UserController>
@@ -30,6 +33,7 @@ namespace UserWebAPI.Controllers
         [HttpGet("{id:long}")]
         public async Task<IActionResult> Get(long id)
         {
+            _logger.LogDebug($"Get({id}) user ");
             var response = await _userService.Get(id);
 
             return StatusCode((int)response.ErrorCode!, response);

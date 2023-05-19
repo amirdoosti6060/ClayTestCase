@@ -7,10 +7,12 @@ namespace UserWebAPI.Services
     public class UserService: IUserService
     {
         private readonly UserDbContext _dbContext;
+        private readonly ILogger<UserService> _logger;
 
-        public UserService(UserDbContext dbContext)
+        public UserService(UserDbContext dbContext, ILogger<UserService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<GeneralResponse> Get(long id)

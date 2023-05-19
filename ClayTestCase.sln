@@ -13,9 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HistoryWebAPI", "HistoryWeb
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQServiceLib", "RabbitMQService\RabbitMQServiceLib.csproj", "{9385B240-CA55-429F-8796-BA4A89AC16A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserWebAPI.Test", "UserWebAPI.Test\UserWebAPI.Test.csproj", "{AE124290-BACF-44FD-B2EC-C624D25DDF37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserWebAPI.Test", "UserWebAPI.Test\UserWebAPI.Test.csproj", "{AE124290-BACF-44FD-B2EC-C624D25DDF37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HistoryWebAPI.Test", "HistoryWebAPI.Test\HistoryWebAPI.Test.csproj", "{991E18E3-58F9-4FCD-B04B-8AB178522C2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HistoryWebAPI.Test", "HistoryWebAPI.Test\HistoryWebAPI.Test.csproj", "{991E18E3-58F9-4FCD-B04B-8AB178522C2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockHandlerWebAPI", "LockHandlerWebAPI\LockHandlerWebAPI.csproj", "{E705E251-EDCD-42B0-8143-9AF69A5679B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{991E18E3-58F9-4FCD-B04B-8AB178522C2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

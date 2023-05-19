@@ -1,51 +1,22 @@
-using HistoryWebAPI.Interfaces;
-using HistoryWebAPI.Models;
-using HistoryWebAPI.Services;
+using LockHandlerWebAPI.Models;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using RabbitMQServiceLib;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
-try
-{
-    builder.Configuration.AddEnvironmentVariables();
+// Add services to the container.
+builder.Configuration.AddEnvironmentVariables();
 
-    builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog(CreateSerilogLogger(builder.Configuration));
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(CreateSerilogLogger(builder.Configuration));
 
-    // Add services to the container.
-    builder.Services.AddTransient<IHistoryService, HistoryService>();
-
-    builder.Services.AddSingleton(sp =>
-        new RabbitBusBuilder()
-            .HostName(builder.Configuration["RabbitMQ:Hostname"])
-            .UserName(builder.Configuration["RabbitMQ:Username"])
-            .Password(builder.Configuration["RabbitMQ:Password"])
-            .build()
-    );
-    
-    builder.Services.AddHostedService<RabbitListener>();
-
-    builder.Services.AddDbContext<HistoryDbContext>(options =>
-    {
-        var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-    });
-
-    builder.Services.AddControllers();
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-}
-catch (Exception ex)
-{
-    Log.Error(ex, "Initialization error.");
-}
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -63,8 +34,8 @@ app.UseExceptionHandler(errorApp =>
         {
             var response = new GeneralResponse
             {
-                ErrorCode = ex.Error.GetType().Name,
-                ErrorMessage = ex.Error.Message,
+                Code = ex.Error.GetType().Name,
+                Message = ex.Error.Message,
                 Data = builder.Environment.IsDevelopment() ? ex.Error : ex.Error.Source
             };
 
@@ -87,7 +58,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
 
 Serilog.Core.Logger CreateSerilogLogger(IConfiguration config)
 {

@@ -1,4 +1,4 @@
-﻿namespace DoorWebAPI.Models
+﻿namespace LockHandlerWebAPI.Models
 {
     public class GeneralResponse
     {

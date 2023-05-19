@@ -1,8 +1,12 @@
 ﻿using DoorWebAPI.Interfaces;
 using DoorWebAPI.Models;
-using HistoryWebAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using RabbitMQServiceLib;
+using System.Net;
+using System.Text;
 
 namespace DoorWebAPI.Services
 {
@@ -10,18 +14,24 @@ namespace DoorWebAPI.Services
     {
         private readonly DoorDbContext _dbContext;
         private readonly IBus _bus;
+        private readonly ILogger<DoorService> _logger;
+        private readonly LockHandlerSettings _lockHandlerSettings;
 
-        public DoorService(DoorDbContext dbContext, IBus bus)
+        public DoorService(DoorDbContext dbContext, IBus bus, 
+            ILogger<DoorService> logger,
+            IOptions<LockHandlerSettings> lockHandlerSettings)
         {
             _dbContext = dbContext;
             _bus = bus;
+            _logger = logger;
+            _lockHandlerSettings = lockHandlerSettings.Value;
         }
 
         public async Task<GeneralResponse> Get(long doorId)
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Door
@@ -30,8 +40,8 @@ namespace DoorWebAPI.Services
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Door {doorId} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Door {doorId} not found!";
             }
 
             return response;
@@ -41,15 +51,15 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Door.ToListAsync();
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = "No door found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = "No door found!";
             }
 
             return response;
@@ -59,7 +69,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             Door door = new Door
@@ -72,8 +82,8 @@ namespace DoorWebAPI.Services
             _dbContext.Door.Add(door);
             if (await _dbContext.SaveChangesAsync() <= 0)
             {
-                response.ErrorCode = StatusCodes.Status400BadRequest;
-                response.ErrorMessage = $"Unable to add door!";
+                response.Code = StatusCodes.Status400BadRequest;
+                response.Message = $"Unable to add door!";
             }
             else
                 response.Data = door.Id;
@@ -86,7 +96,7 @@ namespace DoorWebAPI.Services
             int nupdate = 0;
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var foundDoor = await _dbContext.Door
@@ -94,8 +104,8 @@ namespace DoorWebAPI.Services
                 .FirstOrDefaultAsync();
             if (foundDoor == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Door {doorId} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Door {doorId} not found!";
             }
             else
             {
@@ -108,8 +118,8 @@ namespace DoorWebAPI.Services
 
                 if (nupdate <= 0)
                 {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to update door {doorId} !";
+                    response.Code = StatusCodes.Status400BadRequest;
+                    response.Message = $"Unable to update door {doorId} !";
                 }
                 else
                     response.Data = doorId;
@@ -122,7 +132,7 @@ namespace DoorWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var door = await _dbContext.Door
@@ -130,8 +140,8 @@ namespace DoorWebAPI.Services
                 .FirstOrDefaultAsync();
             if (door == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"Door {doorId} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"Door {doorId} not found!";
             }
             else
             {
@@ -139,8 +149,8 @@ namespace DoorWebAPI.Services
                 var nupdate = await _dbContext.SaveChangesAsync();
                 if (nupdate <= 0)
                 {
-                    response.ErrorCode = StatusCodes.Status400BadRequest;
-                    response.ErrorMessage = $"Unable to delete permission {doorId}";
+                    response.Code = StatusCodes.Status400BadRequest;
+                    response.Message = $"Unable to delete permission {doorId}";
                 }
                 else
                     response.Data = doorId;
@@ -167,60 +177,112 @@ namespace DoorWebAPI.Services
             return door;
         }
 
+        private async Task<HttpStatusCode> Unlock(string hardwareId)
+        {
+            var status = HttpStatusCode.BadRequest;
+
+            try
+            {
+                var client = new HttpClient();
+                var url = _lockHandlerSettings.Url.Replace("{hardwareid}", hardwareId);
+                var unlockResp = await client.GetAsync(url);
+
+                status = unlockResp.StatusCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in opening door");
+            }
+
+            return status;
+        }
+
+        private void ToGeneralResponse(
+            HttpStatusCode status, 
+            string email, string role, long doorid,
+            ref GeneralResponse resp)
+        {
+            switch (status)
+            {
+                case HttpStatusCode.Unauthorized:
+                    resp.Code = StatusCodes.Status401Unauthorized;
+                    resp.Message = $"User {email} with role {role} is not authorized to unlock door {doorid}";
+                    resp.Data = "unauthorized";
+                    break;
+
+                case HttpStatusCode.OK:
+                    resp.Code = StatusCodes.Status200OK;
+                    resp.Message = $"Door {doorid} Unlocked!";
+                    resp.Data = "ok";
+                    break;
+
+                case HttpStatusCode.RequestTimeout:
+                    resp.Code = StatusCodes.Status408RequestTimeout;
+                    resp.Message = $"Door {doorid} didn't respond!";
+                    resp.Data = "timeout";
+                    break;
+
+                case HttpStatusCode.BadRequest:
+                    resp.Code = StatusCodes.Status400BadRequest;
+                    resp.Message = $"Something is wrong with door {doorid}!";
+                    resp.Data = "badrequest";
+                    break;
+
+                case HttpStatusCode.NotFound:
+                    resp.Code = StatusCodes.Status404NotFound;
+                    resp.Message = $"Door {doorid} not found!";
+                    resp.Data = "notfound";
+                    break;
+
+                default:
+                    resp.Code = StatusCodes.Status404NotFound;
+                    resp.Message = $"Unknown error happend!";
+                    resp.Code = "unknown";
+                    break;
+            }
+
+        }
+
         public async Task<GeneralResponse> Unlock(UserInfo? userInfo, long doorId)
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
-            string status = "";
-
             Door? door = await GetDoorInfo(doorId);
 
             if (!await UserAuthorized(userInfo!, doorId))
             {
-                response.ErrorCode = StatusCodes.Status401Unauthorized;
-                response.ErrorMessage = $"User {userInfo.Email} with role {userInfo.Role} is not authorized to unlock door {doorId}";
-                status = "Unauthorized";
+                ToGeneralResponse(HttpStatusCode.Unauthorized, userInfo!.Email, 
+                    userInfo.Role, doorId, ref response);
             }
             else
             {
-                LockHardware lockHw = new LockHardware();
-                CancellationTokenSource tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(1500));
-                CancellationToken token = tokenSource.Token;
                 try
                 {
-                    status = await lockHw.UnLock(door!.HardwareId, token);
-                    switch (status)
-                    {
-                        case "Timeout":
-                            response.ErrorCode = StatusCodes.Status408RequestTimeout;
-                            response.ErrorMessage = $"Door {doorId} didn't respond!";
-                            break;
-                        case "Fail":
-                            response.ErrorCode = StatusCodes.Status406NotAcceptable;
-                            response.ErrorMessage = $"Door {doorId} didn't respond!";
-                            break;
-                    }
-                } 
+                    var status = await Unlock(door!.HardwareId);
+                    ToGeneralResponse(status, userInfo!.Email,
+                        userInfo.Role, doorId, ref response);
+
+                }
                 catch
                 {
-                    status = "Timeout";
-                    response.ErrorCode = StatusCodes.Status408RequestTimeout;
-                    response.ErrorMessage = $"Door {doorId} didn't respond!";
+                    ToGeneralResponse(HttpStatusCode.RequestTimeout, userInfo!.Email,
+                        userInfo.Role, doorId, ref response);
                 }
             }
 
+            // Send message to history
             DoorUnlockInfo doorUnlockInfo = new DoorUnlockInfo
             {
                 DoorId = doorId,
                 DoorName = door != null? door.Name: "",
                 HardwareId = door != null ? door.HardwareId: "",
-                UserId = userInfo.Id,
+                UserId = userInfo!.Id,
                 FullName = userInfo.FullName,
                 Email = userInfo.Email,
                 Role = userInfo.Role,
-                ActionStatus = status,
+                ActionStatus = (response.Data as string)!,
                 TimeStamp = DateTime.Now
             };
 

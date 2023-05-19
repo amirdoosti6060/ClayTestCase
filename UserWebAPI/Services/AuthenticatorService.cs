@@ -13,11 +13,16 @@ namespace UserWebAPI.Services
     {
         private readonly UserDbContext _dbContext;
         private readonly JwtSettings _jwtSettings;
+        private readonly ILogger<AuthenticatorService> _logger;
 
-        public AuthenticatorService(UserDbContext dbContext, IOptions<JwtSettings> jwtSettings)
+        public AuthenticatorService(
+            UserDbContext dbContext, 
+            IOptions<JwtSettings> jwtSettings,
+            ILogger<AuthenticatorService> logger)
         {
             _dbContext = dbContext;
             _jwtSettings = jwtSettings.Value;
+            _logger = logger;
         }
 
         public async Task<GeneralResponse> Login(LoginRequest loginRequest)
@@ -53,9 +58,9 @@ namespace UserWebAPI.Services
 
         private string GenerateToken(User user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.JwtSettings_Key!));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Key!));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-            int.TryParse(_jwtSettings.JwtSettings_AccessTokenValidityInMinute, out int validityInMinute);
+            int.TryParse(_jwtSettings.AccessTokenValidityInMinute, out int validityInMinute);
 
             var claims = new[]
             {
@@ -67,8 +72,8 @@ namespace UserWebAPI.Services
             };
 
             var token = new JwtSecurityToken(
-                _jwtSettings.JwtSettings_Issuer,
-                _jwtSettings.JwtSettings_Audience,
+                _jwtSettings.Issuer,
+                _jwtSettings.Audience,
                 claims,
                 expires: DateTime.Now.AddMinutes(validityInMinute),
                 signingCredentials: credentials);
