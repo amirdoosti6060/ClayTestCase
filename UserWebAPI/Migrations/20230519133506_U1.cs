@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -8,8 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace UserWebAPI.Migrations
 {
     /// <inheritdoc />
-    [ExcludeFromCodeCoverage]
-    public partial class M1 : Migration
+    public partial class U1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,13 +21,13 @@ namespace UserWebAPI.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    email = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     password = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    fullname = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                    fullname = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    role = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    role = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     createdAt = table.Column<DateTime>(type: "datetime", nullable: false)
                 },

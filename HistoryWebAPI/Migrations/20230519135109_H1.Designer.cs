@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HistoryWebAPI.Migrations
 {
     [DbContext(typeof(HistoryDbContext))]
-    [Migration("20230518084644_H1")]
+    [Migration("20230519135109_H1")]
     partial class H1
     {
         /// <inheritdoc />
@@ -41,32 +41,32 @@ namespace HistoryWebAPI.Migrations
 
                     b.Property<string>("DoorName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("doorName");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
                         .HasColumnName("fullname");
 
                     b.Property<string>("HardwareId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("hardwareId");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)")
                         .HasColumnName("role");
 
                     b.Property<DateTime>("TimeStamp")

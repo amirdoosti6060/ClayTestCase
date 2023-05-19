@@ -30,26 +30,26 @@ namespace HistoryWebAPI.Models
 
                 entity.Property(e => e.DoorName)
                     .HasColumnName("doorName")
-                    .HasMaxLength(100);
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.HardwareId)
                     .HasColumnName("hardwareId")
-                    .HasMaxLength(50);
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.UserId)
                     .HasColumnName("userId");
 
                 entity.Property(e => e.FullName)
                     .HasColumnName("fullname")
-                    .HasMaxLength(150);
+                    .HasMaxLength(40);
 
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
-                    .HasMaxLength(100);
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
-                    .HasMaxLength(100);
+                    .HasMaxLength(25);
 
                 entity.Property(e => e.ActionStatus)
                     .HasColumnName("actionStatus")

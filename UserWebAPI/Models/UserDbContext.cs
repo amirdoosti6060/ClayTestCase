@@ -26,7 +26,7 @@ namespace UserWebAPI.Models
 
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
-                    .HasMaxLength(100);
+                    .HasMaxLength(50);
                     
                 entity.Property(e => e.Password)
                     .HasColumnName("password")
@@ -34,11 +34,11 @@ namespace UserWebAPI.Models
 
                 entity.Property(e => e.FullName)
                     .HasColumnName("fullname")
-                    .HasMaxLength(150);
+                    .HasMaxLength(40);
 
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
-                    .HasMaxLength(100);
+                    .HasMaxLength(25);
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("datetime")

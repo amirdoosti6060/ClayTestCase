@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HistoryWebAPI.Migrations
 {
-    [ExcludeFromCodeCoverage]
     /// <inheritdoc />
     public partial class H1 : Migration
     {
@@ -24,16 +22,16 @@ namespace HistoryWebAPI.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     doorId = table.Column<long>(type: "bigint", nullable: false),
-                    doorName = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    doorName = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    hardwareId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    hardwareId = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     userId = table.Column<long>(type: "bigint", nullable: false),
-                    fullname = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                    fullname = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    email = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    role = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    role = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     actionStatus = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),

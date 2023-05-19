@@ -11,8 +11,8 @@ using UserWebAPI.Models;
 namespace UserWebAPI.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20230514060426_M1")]
-    partial class M1
+    [Migration("20230519133506_U1")]
+    partial class U1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,14 +35,14 @@ namespace UserWebAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)")
                         .HasColumnName("email");
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(40)
+                        .HasColumnType("varchar(40)")
                         .HasColumnName("fullname");
 
                     b.Property<string>("Password")
@@ -53,8 +53,8 @@ namespace UserWebAPI.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
