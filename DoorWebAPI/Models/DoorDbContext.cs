@@ -4,7 +4,7 @@ namespace DoorWebAPI.Models
 {
     public class DoorDbContext: DbContext
     {
-        public virtual DbSet<Door> Door { get; set; } = null!;
+        public virtual DbSet<Door> Doors { get; set; } = null!;
         public virtual DbSet<Permission> Permissions { get; set; } = null!;
 
         public DoorDbContext(DbContextOptions<DoorDbContext> options): base (options)

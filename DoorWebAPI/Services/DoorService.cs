@@ -34,7 +34,7 @@ namespace DoorWebAPI.Services
                 Code = StatusCodes.Status200OK
             };
 
-            response.Data = await _dbContext.Door
+            response.Data = await _dbContext.Doors
                 .Where(e => e.Id == doorId)
                 .FirstOrDefaultAsync();
 
@@ -54,9 +54,9 @@ namespace DoorWebAPI.Services
                 Code = StatusCodes.Status200OK
             };
 
-            response.Data = await _dbContext.Door.ToListAsync();
+            response.Data = await _dbContext.Doors.ToListAsync();
 
-            if (response.Data == null)
+            if ((response.Data as List<Door>)!.Count == 0)
             {
                 response.Code = StatusCodes.Status404NotFound;
                 response.Message = "No door found!";
@@ -79,27 +79,21 @@ namespace DoorWebAPI.Services
                 ModifiedAt = DateTime.Now
             };
 
-            _dbContext.Door.Add(door);
-            if (await _dbContext.SaveChangesAsync() <= 0)
-            {
-                response.Code = StatusCodes.Status400BadRequest;
-                response.Message = $"Unable to add door!";
-            }
-            else
-                response.Data = door.Id;
+            _dbContext.Doors.Add(door);
+            await _dbContext.SaveChangesAsync();
+            response.Data = door.Id;
 
             return response;
         }
 
         public async Task<GeneralResponse> Update(long doorId, AddUpdateDoorRequest appUpdateDoorRequest)
         {
-            int nupdate = 0;
             GeneralResponse response = new GeneralResponse()
             {
                 Code = StatusCodes.Status200OK
             };
 
-            var foundDoor = await _dbContext.Door
+            var foundDoor = await _dbContext.Doors
                 .Where(e => e.Id == doorId)
                 .FirstOrDefaultAsync();
             if (foundDoor == null)
@@ -113,16 +107,9 @@ namespace DoorWebAPI.Services
                 foundDoor.HardwareId = appUpdateDoorRequest.HardwareId;
                 foundDoor.ModifiedAt = DateTime.Now;
 
-                _dbContext.Door.Update(foundDoor);
-                nupdate = await _dbContext.SaveChangesAsync();
-
-                if (nupdate <= 0)
-                {
-                    response.Code = StatusCodes.Status400BadRequest;
-                    response.Message = $"Unable to update door {doorId} !";
-                }
-                else
-                    response.Data = doorId;
+                _dbContext.Doors.Update(foundDoor);
+                await _dbContext.SaveChangesAsync();
+                response.Data = doorId;
             }
 
             return response;
@@ -135,7 +122,7 @@ namespace DoorWebAPI.Services
                 Code = StatusCodes.Status200OK
             };
 
-            var door = await _dbContext.Door
+            var door = await _dbContext.Doors
                 .Where(e => e.Id == doorId)
                 .FirstOrDefaultAsync();
             if (door == null)
@@ -145,15 +132,9 @@ namespace DoorWebAPI.Services
             }
             else
             {
-                _dbContext.Door.Remove(door);
-                var nupdate = await _dbContext.SaveChangesAsync();
-                if (nupdate <= 0)
-                {
-                    response.Code = StatusCodes.Status400BadRequest;
-                    response.Message = $"Unable to delete permission {doorId}";
-                }
-                else
-                    response.Data = doorId;
+                _dbContext.Doors.Remove(door);
+                await _dbContext.SaveChangesAsync();
+                response.Data = doorId;
             }
 
             return response;
@@ -170,7 +151,7 @@ namespace DoorWebAPI.Services
 
         private async Task<Door?> GetDoorInfo(long doorId)
         {
-            Door? door = await _dbContext.Door
+            Door? door = await _dbContext.Doors
                 .Where(e => e.Id == doorId)
                 .FirstOrDefaultAsync();
 

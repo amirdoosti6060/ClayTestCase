@@ -36,7 +36,6 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             _dbContext.Dispose();
         }
 
-
         [Fact]
         public async Task Get_ByUserId_Ok()
         {

@@ -17,20 +17,20 @@ namespace DoorWebAPI.Services
             _logger = logger;
         }
 
-        public async Task<GeneralResponse> Get(long id)
+        public async Task<GeneralResponse> Get(long permId)
         {
             GeneralResponse response = new GeneralResponse()
             {
                 Code = StatusCodes.Status200OK
             };
 
-            response.Data = await _dbContext.Permissions.Where(e => e.Id == id)
+            response.Data = await _dbContext.Permissions.Where(e => e.Id == permId)
                 .FirstOrDefaultAsync<Permission>();
 
             if (response.Data == null)
             {
                 response.Code = StatusCodes.Status404NotFound;
-                response.Message = $"Permission {id} not found!";
+                response.Message = $"Permission {permId} not found!";
             }
 
             return response;
@@ -77,63 +77,6 @@ namespace DoorWebAPI.Services
             return response;
         }
 
-        public async Task<GeneralResponse> GetAll()
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                Code = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.Permissions.ToListAsync();
-
-            if (response.Data == null)
-            {
-                response.Code = StatusCodes.Status404NotFound;
-                response.Message = "No permission found!";
-            }
-
-            return response;
-        }
-
-        public async Task<GeneralResponse> GetAllByDoor(long doorId)
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                Code = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.Permissions.Where(e => e.DoorId == doorId)
-                .ToListAsync<Permission>();
-
-            if (response.Data == null)
-            {
-                response.Code = StatusCodes.Status404NotFound;
-                response.Message = $"No permission exists for door ID={doorId} !";
-            }
-
-            return response;
-        }
-
-        public async Task<GeneralResponse> GetAllByRole(string role)
-        {
-            GeneralResponse response = new GeneralResponse()
-            {
-                Code = StatusCodes.Status200OK
-            };
-
-            response.Data = await _dbContext.Permissions
-                .Where(e => e.Role == role)
-                .ToListAsync<Permission>();
-
-            if (response.Data == null)
-            {
-                response.Code = StatusCodes.Status404NotFound;
-                response.Message = $"No permission exists for role={role} !";
-            }
-
-            return response;
-        }
-
         public async Task<GeneralResponse> Add(AddPermissionRequest addPermRequest)
         {
             GeneralResponse response = new GeneralResponse()
@@ -158,13 +101,8 @@ namespace DoorWebAPI.Services
             else
             {
                 _dbContext.Permissions.Add(perm);
-                if (await _dbContext.SaveChangesAsync() <= 0)
-                {
-                    response.Code = StatusCodes.Status400BadRequest;
-                    response.Message = $"Unable to add permission!";
-                }
-                else
-                    response.Data = perm.Id;
+                await _dbContext.SaveChangesAsync();
+                response.Data = perm.Id;
             }
 
             return response;
@@ -188,14 +126,8 @@ namespace DoorWebAPI.Services
             else
             {
                 _dbContext.Permissions.Remove(permission);
-                var nupdate = await _dbContext.SaveChangesAsync();
-                if (nupdate <= 0)
-                {
-                    response.Code = StatusCodes.Status400BadRequest;
-                    response.Message = $"Unable to delete permission {permId}";
-                }
-                else
-                    response.Data = permId;
+                await _dbContext.SaveChangesAsync();
+                response.Data = permId;
             }
 
             return response;
@@ -220,14 +152,8 @@ namespace DoorWebAPI.Services
             else
             {
                 _dbContext.Permissions.Remove(permission);
-                var nupdate = await _dbContext.SaveChangesAsync();
-                if (nupdate <= 0)
-                {
-                    response.Code = StatusCodes.Status400BadRequest;
-                    response.Message = $"Unable to delete permission ({doorId},{role})";
-                }
-                else
-                    response.Data = permission.Id;
+                await _dbContext.SaveChangesAsync();
+                response.Data = permission.Id;
             }
 
             return response;

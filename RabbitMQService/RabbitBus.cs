@@ -8,7 +8,7 @@ namespace RabbitMQServiceLib
     public class RabbitBus : IBus
     {
         private readonly IModel _channel;
-        internal RabbitBus(IModel channel)
+        public RabbitBus(IModel channel)
         {
             _channel = channel;
         }

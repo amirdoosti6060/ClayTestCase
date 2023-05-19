@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoorWebAPI.Migrations
 {
     [DbContext(typeof(DoorDbContext))]
-    [Migration("20230519130007_D1")]
+    [Migration("20230519183916_D1")]
     partial class D1
     {
         /// <inheritdoc />
