@@ -26,7 +26,7 @@ namespace UserWebAPI.Controllers
         {
             var response = await _userService.GetAll();
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // GET api/<UserController>/5
@@ -36,7 +36,7 @@ namespace UserWebAPI.Controllers
             _logger.LogDebug($"Get({id}) user ");
             var response = await _userService.Get(id);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // POST api/<UserController>
@@ -45,7 +45,7 @@ namespace UserWebAPI.Controllers
         {
             var response = await _userService.Add(addUserRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // PUT api/<UserController>/5
@@ -54,7 +54,7 @@ namespace UserWebAPI.Controllers
         {
             var response = await _userService.Update(id, updateUserRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
 
         // DELETE api/<UserController>/5
@@ -63,7 +63,7 @@ namespace UserWebAPI.Controllers
         {
             var response = await _userService.Delete(id);
 
-            return StatusCode((int) response.ErrorCode!, response);
+            return StatusCode((int) response.Code!, response);
         }
     }
 }

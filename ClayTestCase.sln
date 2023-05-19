@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserWebAPI.Test", "UserWebA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HistoryWebAPI.Test", "HistoryWebAPI.Test\HistoryWebAPI.Test.csproj", "{991E18E3-58F9-4FCD-B04B-8AB178522C2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockHandlerWebAPI", "LockHandlerWebAPI\LockHandlerWebAPI.csproj", "{E705E251-EDCD-42B0-8143-9AF69A5679B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LockHandlerWebAPI", "LockHandlerWebAPI\LockHandlerWebAPI.csproj", "{E705E251-EDCD-42B0-8143-9AF69A5679B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorWebAPI.Test", "DoorWebAPI.Test\DoorWebAPI.Test.csproj", "{05A81CD4-1699-4440-970B-92729FB17AB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E705E251-EDCD-42B0-8143-9AF69A5679B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05A81CD4-1699-4440-970B-92729FB17AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05A81CD4-1699-4440-970B-92729FB17AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05A81CD4-1699-4440-970B-92729FB17AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05A81CD4-1699-4440-970B-92729FB17AB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

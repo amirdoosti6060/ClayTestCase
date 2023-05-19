@@ -1,16 +1,20 @@
 ﻿using DoorWebAPI.Interfaces;
 using DoorWebAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Dynamic.Core;
 
 namespace DoorWebAPI.Services
 {
     public class PermissionService: IPermissionService
     {
         private readonly DoorDbContext _dbContext;
+        private readonly ILogger<PermissionService> _logger;
 
-        public PermissionService(DoorDbContext dbContext)
+        public PermissionService(DoorDbContext dbContext, ILogger<PermissionService> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         public async Task<GeneralResponse> Get(long id)
@@ -32,22 +36,43 @@ namespace DoorWebAPI.Services
             return response;
         }
 
-        public async Task<GeneralResponse> Get(long doorId, string role)
+        private string GetOperator(string? str)
+        {
+            return string.IsNullOrEmpty(str) ? "" : " AND ";
+        }
+
+        private string BuildQuery(GetPermissionRequest getPermissionRequest)
+        {
+            string qry = "";
+            if (getPermissionRequest.doorId != null)
+                qry += $"doorId = {getPermissionRequest.doorId}";
+            if (!string.IsNullOrEmpty(getPermissionRequest.role))
+                qry += GetOperator(qry) + $"role = \"{getPermissionRequest.role}\"";
+
+            return qry;
+        }
+
+        public async Task<GeneralResponse> Get(GetPermissionRequest getPermissionRequest)
         {
             GeneralResponse response = new GeneralResponse()
             {
                 Code = StatusCodes.Status200OK
             };
 
-            response.Data = await _dbContext.Permissions
-                .Where(e => e.DoorId == doorId && e.Role == role)
-                .FirstOrDefaultAsync<Permission>();
+            string qry = BuildQuery(getPermissionRequest);
 
-            if (response.Data == null)
+            if (string.IsNullOrEmpty(qry))
+                response.Data = await _dbContext.Permissions.ToListAsync<Permission>();
+            else
+                response.Data = await _dbContext.Permissions.Where(qry).ToListAsync();
+
+            if ((response.Data as List<Permission>)!.Count == 0)
             {
                 response.Code = StatusCodes.Status404NotFound;
-                response.Message = $"Permission ({doorId},{role}) not found!";
+                response.Message = "Requested permission not found!";
             }
+
+            _logger.LogDebug($"Generated query: {qry}!");
 
             return response;
         }

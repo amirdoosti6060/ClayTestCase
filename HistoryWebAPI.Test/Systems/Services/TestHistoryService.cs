@@ -48,7 +48,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
             Assert.True((resp.Data as List<History>)!.Count > 0);
         }
 
@@ -135,7 +135,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
             Assert.Equal(_top, (resp.Data as List<History>)!.Count);
         }
 
@@ -163,7 +163,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
             Assert.Equal(_top, (resp.Data as List<History>)!.Count);
         }
 
@@ -185,7 +185,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace HistoryWebAPI.Test.Systems.Services
             var resp = await _historyService.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status400BadRequest, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status400BadRequest, resp.Code);
         }
     }
 }

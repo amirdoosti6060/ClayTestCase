@@ -51,15 +51,15 @@ namespace HistoryWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             string qry = BuildQuery(historyRequest);
 
             if (string.IsNullOrEmpty(qry))
             {
-                response.ErrorCode = StatusCodes.Status400BadRequest;
-                response.ErrorMessage = "Requested is not valid!";
+                response.Code = StatusCodes.Status400BadRequest;
+                response.Message = "Requested is not valid!";
             }
             else
             {
@@ -72,8 +72,8 @@ namespace HistoryWebAPI.Services
 
                 if ((response.Data as List<History>)!.Count == 0)
                 {
-                    response.ErrorCode = StatusCodes.Status404NotFound;
-                    response.ErrorMessage = "Requested history not found!";
+                    response.Code = StatusCodes.Status404NotFound;
+                    response.Message = "Requested history not found!";
                 }
             }
 

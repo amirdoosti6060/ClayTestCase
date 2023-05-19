@@ -54,7 +54,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             var resp = await _historyController.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             var resp = await _historyController.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             var resp = await _historyController.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -117,7 +117,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
 
             //Assert
             var generalResponse = resp.GetGeneralResponse();
-            Assert.Equal(StatusCodes.Status200OK, generalResponse!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, generalResponse!.Code);
             Assert.True((generalResponse.Data as List<History>)!.Count > 0);
         }
 
@@ -143,7 +143,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
 
             //Assert
             var generalResponse = resp.GetGeneralResponse();
-            Assert.Equal(StatusCodes.Status200OK, generalResponse!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, generalResponse!.Code);
             Assert.Equal(_top, (generalResponse.Data as List<History>)!.Count);
         }
 
@@ -172,7 +172,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
 
             //Assert
             var generalResponse = resp.GetGeneralResponse();
-            Assert.Equal(StatusCodes.Status200OK, generalResponse!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, generalResponse!.Code);
             Assert.Equal(_top, (generalResponse.Data as List<History>)!.Count);
         }
 
@@ -194,7 +194,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             var resp = await _historyController.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -211,7 +211,7 @@ namespace HistoryWebAPI.Test.Systems.Controllers
             var resp = await _historyController.Get(historyRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status400BadRequest, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status400BadRequest, resp.GetGeneralResponse()!.Code);
         }
     }
 }

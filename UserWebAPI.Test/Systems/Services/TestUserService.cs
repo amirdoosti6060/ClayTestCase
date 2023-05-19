@@ -49,7 +49,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Get(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Theory]
@@ -64,8 +64,8 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Get(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
-            Assert.NotNull(resp.ErrorMessage);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
+            Assert.NotNull(resp.Message);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.GetAll();
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
             Assert.NotNull(resp.Data);
             Assert.Equal(users.Count, (resp.Data as List<User>)!.Count);
         }
@@ -94,7 +94,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.GetAll();
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
         }
 
         [Fact]
@@ -114,7 +114,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Add(addUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Update(user.Id, updateUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Theory]
@@ -163,7 +163,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Update(userId, updateUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Delete(users[0].Id);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Theory]
@@ -194,7 +194,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _userService.Delete(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
         }
     }
 }

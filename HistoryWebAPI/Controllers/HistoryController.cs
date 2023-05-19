@@ -24,7 +24,7 @@ namespace HistoryWebAPI.Controllers
         {
             var response = await _historyService.Get(historyRequest);
 
-            return StatusCode((int)response.ErrorCode!, response);
+            return StatusCode((int)response.Code!, response);
         }
     }
 }

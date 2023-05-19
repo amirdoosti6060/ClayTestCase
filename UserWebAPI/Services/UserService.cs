@@ -19,15 +19,15 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Users.Where(e => e.Id == id).FirstOrDefaultAsync<User>();
 
             if (response.Data == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"User {id} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"User {id} not found!";
             }
 
             return response;
@@ -37,15 +37,15 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             response.Data = await _dbContext.Users.ToListAsync();
 
             if ((response.Data as List<User>)!.Count == 0)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = "No user found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = "No user found!";
             }
 
             return response;
@@ -55,7 +55,7 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             User user = new User
@@ -77,7 +77,7 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var foundUser = await _dbContext.Users
@@ -86,8 +86,8 @@ namespace UserWebAPI.Services
 
             if (foundUser == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"User {id} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"User {id} not found!";
             }
             else
             { 
@@ -108,7 +108,7 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var user = await _dbContext.Users
@@ -117,8 +117,8 @@ namespace UserWebAPI.Services
 
             if (user == null)
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"User {id} not found!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"User {id} not found!";
             }
             else
             {

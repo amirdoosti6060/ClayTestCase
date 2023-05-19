@@ -21,9 +21,9 @@ namespace DoorWebAPI.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    name = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    hardwareId = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    hardwareId = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     modifiedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -39,25 +39,36 @@ namespace DoorWebAPI.Migrations
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    role = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
+                    role = table.Column<string>(type: "varchar(25)", maxLength: 25, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     doorId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_permission", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_permission_door_doorId",
+                        column: x => x.doorId,
+                        principalTable: "door",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_permission_doorId",
+                table: "permission",
+                column: "doorId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "door");
+                name: "permission");
 
             migrationBuilder.DropTable(
-                name: "permission");
+                name: "door");
         }
     }
 }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DoorWebAPI.Migrations
 {
     [DbContext(typeof(DoorDbContext))]
-    [Migration("20230514192627_D1")]
+    [Migration("20230519130007_D1")]
     partial class D1
     {
         /// <inheritdoc />
@@ -31,8 +31,8 @@ namespace DoorWebAPI.Migrations
 
                     b.Property<string>("HardwareId")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("hardwareId");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -41,8 +41,8 @@ namespace DoorWebAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -63,13 +63,31 @@ namespace DoorWebAPI.Migrations
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25)")
                         .HasColumnName("role");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DoorId");
+
                     b.ToTable("permission", (string)null);
+                });
+
+            modelBuilder.Entity("DoorWebAPI.Models.Permission", b =>
+                {
+                    b.HasOne("DoorWebAPI.Models.Door", "Door")
+                        .WithMany("Permissions")
+                        .HasForeignKey("DoorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Door");
+                });
+
+            modelBuilder.Entity("DoorWebAPI.Models.Door", b =>
+                {
+                    b.Navigation("Permissions");
                 });
 #pragma warning restore 612, 618
         }

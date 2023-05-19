@@ -63,8 +63,8 @@ app.UseExceptionHandler(errorApp =>
         {
             var response = new GeneralResponse
             {
-                ErrorCode = ex.Error.GetType().Name,
-                ErrorMessage = ex.Error.Message,
+                Code = ex.Error.GetType().Name,
+                Message = ex.Error.Message,
                 Data = builder.Environment.IsDevelopment() ? ex.Error : ex.Error.Source
             };
 

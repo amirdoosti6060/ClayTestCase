@@ -54,7 +54,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Get(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Theory]
@@ -69,7 +69,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Get(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
         
         [Fact]
@@ -84,7 +84,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Get();
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
         
         [Fact]
@@ -96,7 +96,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Get();
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
         
         [Fact]
@@ -116,7 +116,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Post(addUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
         
         [Fact]
@@ -140,7 +140,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Put(user.Id, updateUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Theory]
@@ -165,7 +165,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Put(userId, updateUserRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Delete(users[0].Id);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Theory]
@@ -196,7 +196,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _userController.Delete(userId);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
     }
 }

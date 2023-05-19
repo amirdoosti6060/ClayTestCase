@@ -29,7 +29,7 @@ namespace UserWebAPI.Services
         {
             GeneralResponse response = new GeneralResponse()
             {
-                ErrorCode = StatusCodes.Status200OK
+                Code = StatusCodes.Status200OK
             };
 
             var user = await Authenticate(loginRequest);
@@ -40,8 +40,8 @@ namespace UserWebAPI.Services
             }
             else
             {
-                response.ErrorCode = StatusCodes.Status404NotFound;
-                response.ErrorMessage = $"User {loginRequest.Email} not found or password is not valid!";
+                response.Code = StatusCodes.Status404NotFound;
+                response.Message = $"User {loginRequest.Email} not found or password is not valid!";
             }
 
             return response;

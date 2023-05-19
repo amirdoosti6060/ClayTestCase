@@ -26,7 +26,7 @@ namespace UserWebAPI.Controllers
         {
             GeneralResponse response = new GeneralResponse
             {
-                ErrorCode = StatusCodes.Status200OK,
+                Code = StatusCodes.Status200OK,
                 Data = "healthy"
             };
 
@@ -39,7 +39,7 @@ namespace UserWebAPI.Controllers
         {
             GeneralResponse result = await _authenticatorService.Login(loginRequest);
 
-            return StatusCode((int) result.ErrorCode!, result);
+            return StatusCode((int) result.Code!, result);
         }
     }
 }

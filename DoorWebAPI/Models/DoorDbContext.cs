@@ -17,6 +17,11 @@ namespace DoorWebAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Permission>()
+                .HasOne(e => e.Door)
+                .WithMany(e => e.Permissions)
+                .HasForeignKey(e => e.DoorId);
+
             modelBuilder.Entity<Door>(entity =>
             {
                 entity.ToTable("door");
@@ -26,11 +31,11 @@ namespace DoorWebAPI.Models
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
-                    .HasMaxLength(100);
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.HardwareId)
                     .HasColumnName("hardwareId")
-                    .HasMaxLength(50);
+                    .HasMaxLength(30);
 
                 entity.Property(e => e.ModifiedAt)
                     .HasColumnName("modifiedAt");
@@ -48,7 +53,7 @@ namespace DoorWebAPI.Models
 
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
-                    .HasMaxLength(100);
+                    .HasMaxLength(25);
             });
         }
     }

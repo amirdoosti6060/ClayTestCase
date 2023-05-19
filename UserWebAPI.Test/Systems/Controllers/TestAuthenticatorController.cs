@@ -77,7 +77,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _authenticatorController.Login(loginRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.GetGeneralResponse()!.Code);
         }
 
         [Theory]
@@ -99,7 +99,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = await _authenticatorController.Login(loginRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace UserWebAPI.Test.Systems.Controllers
             var resp = _authenticatorController.Get();
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp!.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp!.Code);
         }
     }
 }

@@ -68,7 +68,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _authenticatorService.Login(loginRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status200OK, resp.Code);
         }
 
         [Theory]
@@ -90,7 +90,7 @@ namespace UserWebAPI.Test.Systems.Services
             var resp = await _authenticatorService.Login(loginRequest);
 
             //Assert
-            Assert.Equal(StatusCodes.Status404NotFound, resp.ErrorCode);
+            Assert.Equal(StatusCodes.Status404NotFound, resp.Code);
         }
     }
 }

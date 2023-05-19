@@ -2,8 +2,8 @@
 {
     public class GeneralResponse
     {
-        public object? ErrorCode { get; set; }
-        public string? ErrorMessage { get; set; }
+        public object? Code { get; set; }
+        public string? Message { get; set; }
         public object? Data { get; set; }
     }
 }
