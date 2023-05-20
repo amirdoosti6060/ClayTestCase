@@ -20,19 +20,6 @@ namespace UserWebAPI.Controllers
             _logger = logger;
         }
 
-        // GET: api/<AuthenticatorController>
-        [HttpGet]
-        public GeneralResponse Get()
-        {
-            GeneralResponse response = new GeneralResponse
-            {
-                Code = StatusCodes.Status200OK,
-                Data = "healthy"
-            };
-
-            return response;
-        }
-
         // POST api/<AuthenticatorController>
         [HttpPost]
         public async Task<ActionResult> Login([FromBody] LoginRequest loginRequest)

@@ -1,53 +1,125 @@
 {
   "Routes": [
     // Door Web API
+    // Door
     {
       "UpstreamPathTemplate": "/api/Door",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7246
+          "Port": 7002
         }
       ],
-      "DownstreamPathTemplate": "/api/Door"
+      "DownstreamPathTemplate": "/api/Door",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{Door_Allowed}"
+      }
     },
     {
       "UpstreamPathTemplate": "/api/Door/{id}",
-      "UpstreamHttpMethod": [ "Get", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
 
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7146
+          "Port": 7002
         }
       ],
-      "DownstreamPathTemplate": "/api/Door/{id}"
+      "DownstreamPathTemplate": "/api/Door/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{Door_Allowed}"
+      }
     },
-    // User Web API
-    // Authenticator
     {
-      "UpstreamPathTemplate": "/api/Authenticator",
+      "UpstreamPathTemplate": "/api/Door/Unluck/{doorid}",
       "UpstreamHttpMethod": [ "Get" ],
 
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7248
+          "Port": 7002
         }
       ],
-      "DownstreamPathTemplate": "/api/Authenticator",
+      "DownstreamPathTemplate": "/api/Door/Unlock/{doorid}",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
-        "Role": "administrator, manager, user"
+        "Role": "{Unlock_Allowed}"
       }
     },
+    // Door Web API
+    // Permissions
+    {
+      "UpstreamPathTemplate": "/api/Permission",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Permission",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{Permission_Allowed}"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Permission/{permid}",
+      "UpstreamHttpMethod": [ "Get", "Delete" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Permission/{permid}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{Permission_Allowed}"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/Permission/{doorid}/{role}",
+      "UpstreamHttpMethod": [ "Delete" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7002
+        }
+      ],
+      "DownstreamPathTemplate": "/api/Permission/{doorid}/{role}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{Permission_Allowed}"
+      }
+    },
+    // User Web API
+    // Authenticator
     {
       "UpstreamPathTemplate": "/api/Authenticator",
       "UpstreamHttpMethod": [ "Post" ],
@@ -56,7 +128,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7248
+          "Port": 7001
         }
       ],
       "DownstreamPathTemplate": "/api/Authenticator"
@@ -64,13 +136,13 @@
     // User
     {
       "UpstreamPathTemplate": "/api/User",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "UpstreamHttpMethod": [ "Get", "Post" ],
 
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7248
+          "Port": 7001
         }
       ],
       "DownstreamPathTemplate": "/api/User",
@@ -78,7 +150,51 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
-        "Role": "administrator"
+        "Role": "{User_Allowed}"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/api/User/{id}",
+      "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "DownstreamPathTemplate": "/api/User/{id}",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{User_Allowed}"
+      }
+    },
+    // History Web API
+    // History
+    {
+      "UpstreamPathTemplate": "/api/History",
+      "UpstreamHttpMethod": [ "Get" ],
+
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7003
+        }
+      ],
+      "DownstreamPathTemplate": "/api/History",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "FileCacheOptions": {
+        "Region": "history",
+        "TtlSeconds": 15
+      },
+      "RouteClaimsRequirement": {
+        "Role": "{History_Allowed}"
       }
     }
 

@@ -101,17 +101,5 @@ namespace UserWebAPI.Test.Systems.Controllers
             //Assert
             Assert.Equal(StatusCodes.Status404NotFound, resp.GetGeneralResponse()!.Code);
         }
-
-        [Fact]
-        public void Get_Ok()
-        {
-            //Arrange
-
-            //Act
-            var resp = _authenticatorController.Get();
-
-            //Assert
-            Assert.Equal(StatusCodes.Status200OK, resp!.Code);
-        }
     }
 }

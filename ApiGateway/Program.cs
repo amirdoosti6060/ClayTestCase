@@ -1,3 +1,4 @@
+using ApiGateway.Helper;
 using ApiGateway.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
@@ -5,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Cache.CacheManager;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Net;
@@ -34,9 +36,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot(builder.Configuration)
+    .AddCacheManager(x => x.WithDictionaryHandle());
+builder.Services.ConfigureResolveRolePlaceholders(builder.Configuration);
 
 var app = builder.Build();
 
@@ -67,7 +70,14 @@ app.UseExceptionHandler(errorApp =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-await app.UseOcelot();
+var config = new OcelotPipelineConfiguration
+{
+    AuthorizationMiddleware = 
+    async (downStreamContext, next) =>
+        await OcelotJwtMiddleware.CreateAuthorizationFilter(downStreamContext, next)
+};
+
+await app.UseOcelot(config);
 
 app.Run();
 

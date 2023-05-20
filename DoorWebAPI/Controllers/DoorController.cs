@@ -28,10 +28,10 @@ namespace DoorWebAPI.Controllers
         }
 
         // GET api/<DoorController>/5
-        [HttpGet("{doorid:long}")]
-        public async Task<IActionResult> Get(long doorid)
+        [HttpGet("{id:long}")]
+        public async Task<IActionResult> Get(long id)
         {
-            var response = await _doorService.Get(doorid);
+            var response = await _doorService.Get(id);
 
             return StatusCode((int)response.Code!, response);
         }

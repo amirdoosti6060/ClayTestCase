@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HistoryWebAPI.Test", "Histo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LockHandlerWebAPI", "LockHandlerWebAPI\LockHandlerWebAPI.csproj", "{E705E251-EDCD-42B0-8143-9AF69A5679B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorWebAPI.Test", "DoorWebAPI.Test\DoorWebAPI.Test.csproj", "{05A81CD4-1699-4440-970B-92729FB17AB7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoorWebAPI.Test", "DoorWebAPI.Test\DoorWebAPI.Test.csproj", "{05A81CD4-1699-4440-970B-92729FB17AB7}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{05D700F7-AC92-4EF0-A040-E9406C2EF6E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{05A81CD4-1699-4440-970B-92729FB17AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05A81CD4-1699-4440-970B-92729FB17AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05A81CD4-1699-4440-970B-92729FB17AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D700F7-AC92-4EF0-A040-E9406C2EF6E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D700F7-AC92-4EF0-A040-E9406C2EF6E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D700F7-AC92-4EF0-A040-E9406C2EF6E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D700F7-AC92-4EF0-A040-E9406C2EF6E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
