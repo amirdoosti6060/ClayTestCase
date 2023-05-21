@@ -19,10 +19,9 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
-
-
+    
   clay_apigateway:
-    image: apigateway:latest
+    image: amirdoosti/apigateway:latest
     container_name: clay_apigateway
     ports:
       - 8000:8000
@@ -46,11 +45,11 @@ services:
       OcelotParams__Hosts__HistoyWebAPI_Uri: http://clay_historywebapi:8003
       
       Logger__Name: Console
-      Logger__Url: https://localhost:9200
+      Logger__Url: http://localhost:9200
 
 
   clay_userwebapi:
-    image: userwebapi:latest
+    image: amirdoosti/userwebapi:latest
     container_name: clay_userwebapi
     ports:
       - 8001:8001
@@ -64,14 +63,15 @@ services:
       JwtSettings__Audience: https://localhost:7248
 
       Logger__Name: Console
-      Logger__Url: https://localhost:9200
+      Logger__Url: http://localhost:9200
+      
     depends_on:
       - clay_mariadb
       - clay_rabbitmq
 
 
   clay_doorwebapi:
-    image: doorwebapi:latest
+    image: amirdoosti/doorwebapi:latest
     container_name: clay_doorwebapi
     ports:
       - 8002:8002
@@ -91,9 +91,9 @@ services:
       JwtSettings__Audience: https://localhost:7248
 
       Logger__Name: Console
-      Logger__Url: https://localhost:9200
+      Logger__Url: http://localhost:9200
 
-      LockHandler__Url: http://localhost:8004/api/Unlock?hardwareid={hardwareid}
+      LockHandler__Url: http://clay_lockhandlerwebapi:8004/api/Unlock?hardwareid=
       
     depends_on:
       - clay_mariadb
@@ -101,7 +101,7 @@ services:
 
 
   clay_historywebapi:
-    image: historywebapi:latest
+    image: amirdoosti/historywebapi:latest
     container_name: clay_historywebapi
     ports:
       - 8003:8003
@@ -116,7 +116,7 @@ services:
       RabbitMQ__Password: guest
       
       Logger__Name: Console
-      Logger__Url: https://localhost:9200
+      Logger__Url: http://localhost:9200
       
     depends_on:
       - clay_mariadb
@@ -124,7 +124,7 @@ services:
       
 
   clay_lockhandlerwebapi:
-    image: lockhandlerwebapi:latest
+    image: amirdoosti/lockhandlerwebapi:latest
     container_name: clay_lockhandlerwebapi
     ports:
       - 8004:8004
@@ -133,6 +133,6 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       
       Logger__Name: Console
-      Logger__Url: https://localhost:9200
+      Logger__Url: http://localhost:9200
       
        
