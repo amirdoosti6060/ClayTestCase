@@ -35,8 +35,11 @@ namespace UserWebAPI.Helpers
                 }
             };
 
-            dbContext.Users.AddRange(users);
-            dbContext.SaveChanges();
+            if (!dbContext.Users.Any())
+            {
+                dbContext.Users.AddRange(users);
+                dbContext.SaveChanges();
+            }
         }
 
         public static void InitiateDatabase(this WebApplication app)
@@ -53,8 +56,11 @@ namespace UserWebAPI.Helpers
                     try
                     {
                         connected = db.CanConnect();
-                        logger.LogInformation("Migrating database...");
-                        db.Migrate();
+                        if (!connected)
+                        {
+                            logger.LogInformation("Migrating database...");
+                            db.Migrate();
+                        }
                     }
                     catch (Exception ex)
                     {

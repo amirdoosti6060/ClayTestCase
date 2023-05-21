@@ -61,8 +61,22 @@ namespace RabbitMQServiceLib
             if (_port != 0) _factory.Port = _port;
             if (_virtualHost != null) _factory.VirtualHost = _virtualHost;
 
-            _connection = _factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            bool connected = false;
+
+            while (!connected)
+            {
+                try
+                {
+                    _connection = _factory.CreateConnection();
+                    _channel = _connection.CreateModel();
+                    connected = true;
+                }
+                catch
+                {
+                    Task.Delay(1000);
+                }
+            }
+
             return new RabbitBus(_channel);
         }
 

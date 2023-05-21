@@ -32,11 +32,17 @@ namespace DoorWebAPI.Helpers
                 new Permission { DoorId = 2, Role = "manager" }
             };
 
-            dbContext.Doors.AddRange(doors);
-            dbContext.SaveChanges();
+            if (!dbContext.Doors.Any())
+            {
+                dbContext.Doors.AddRange(doors);
+                dbContext.SaveChanges();
+            }
 
-            dbContext.Permissions.AddRange(permissions);
-            dbContext.SaveChanges();
+            if (!dbContext.Permissions.Any())
+            {
+                dbContext.Permissions.AddRange(permissions);
+                dbContext.SaveChanges();
+            }
         }
 
         public static void InitiateDatabase(this WebApplication app)
@@ -53,8 +59,11 @@ namespace DoorWebAPI.Helpers
                     try
                     {
                         connected = db.CanConnect();
-                        logger.LogInformation("Migrating database...");
-                        db.Migrate();
+                        if (!connected)
+                        {
+                            logger.LogInformation("Migrating database...");
+                            db.Migrate();
+                        }
                     }
                     catch (Exception ex)
                     {

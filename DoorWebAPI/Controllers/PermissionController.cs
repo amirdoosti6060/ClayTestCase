@@ -48,7 +48,7 @@ namespace DoorWebAPI.Controllers
 
         // DELETE api/<PermissionController>/5
         [HttpDelete("{permid:long}")]
-        public async Task<IActionResult> Delete(long permid)
+        public async Task<IActionResult> DeleteById(long permid)
         {
             var response = await _permissionService.Delete(permid);
 
@@ -56,7 +56,7 @@ namespace DoorWebAPI.Controllers
         }
 
         // DELETE api/<PermissionController>/1/user
-        [HttpDelete("{doorid:long}/{role:length(25)}")]
+        [HttpDelete("{doorid:long}/{role}")]
         public async Task<IActionResult> Delete(long doorid, string role)
         {
             var response = await _permissionService.Delete(doorid, role);

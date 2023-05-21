@@ -23,8 +23,11 @@ namespace HistoryWebAPI.Helpers
                 }
             };
 
-            dbContext.History.AddRange(histories);
-            dbContext.SaveChanges();
+            if (!dbContext.History.Any())
+            {
+                dbContext.History.AddRange(histories);
+                dbContext.SaveChanges();
+            }
         }
 
         public static void InitiateDatabase(this WebApplication app)
@@ -41,8 +44,11 @@ namespace HistoryWebAPI.Helpers
                     try
                     {
                         connected = db.CanConnect();
-                        logger.LogInformation("Migrating database...");
-                        db.Migrate();
+                        if (!connected)
+                        {
+                            logger.LogInformation("Migrating database...");
+                            db.Migrate();
+                        }
                     }
                     catch (Exception ex)
                     {

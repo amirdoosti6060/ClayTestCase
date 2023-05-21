@@ -165,10 +165,11 @@ namespace DoorWebAPI.Services
             try
             {
                 var client = new HttpClient();
-                var url = _lockHandlerSettings.Url.Replace("{hardwareid}", hardwareId);
+                var url = _lockHandlerSettings.Url + hardwareId;
                 var unlockResp = await client.GetAsync(url);
 
                 status = unlockResp.StatusCode;
+                _logger.LogInformation($"Door unlocked with following url: {url}");
             }
             catch (Exception ex)
             {

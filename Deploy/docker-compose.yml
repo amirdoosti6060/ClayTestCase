@@ -3,38 +3,136 @@ version: '3.9'
 
 services:
 
-#  mariadb1:
-#    image: mariadb
-#    restart: always
-#    ports:
-#      - 3306:3306
-#    environment:
-#      MARIADB_ROOT_PASSWORD: admin
+  clay_mariadb:
+    image: mariadb:latest
+    container_name: clay_mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MARIADB_ROOT_PASSWORD: admin
 
-#  rabbitmq1:
-#    image: rabbitmq:3.12.0-rc.1-management
-#    ports:
-#      - 15672:15672
-#      - 5672:5672
 
-  apigateway:
-    image: apigateway
-#    restart: always
+  clay_rabbitmq:
+    image: rabbitmq:3.12.0-rc.1-management
+    container_name: clay_rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+
+  clay_apigateway:
+    image: apigateway:latest
+    container_name: clay_apigateway
     ports:
       - 8000:8000
-      - 7000:7000
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: root
-#      MONGO_INITDB_ROOT_PASSWORD: example
+    environment:
+      ASPNETCORE_URLS: http://+:8000
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      JwtSettings__Key: ahKJhYE@Jj19hh6156771jGJkjsuiqkjwhqwqweqweuqwklk
+      JwtSettings__AccessTokenValidityInMinute: 120
+      JwtSettings__Issuer: https://localhost:7248
+      JwtSettings__Audience: https://localhost:7248
+      
+      OcelotParams__Authorization__User_Allowed: administrator
+      OcelotParams__Authorization__Permission_Allowed: administrator
+      OcelotParams__Authorization__Door_Allowed: administrator
+      OcelotParams__Authorization__Unlock_Allowed: administrator, manager, employee
+      OcelotParams__Authorization__History_Allowed: administrator, manager
+      
+      OcelotParams__Hosts__UserWebAPI_Uri: http://clay_userwebapi:8001
+      OcelotParams__Hosts__DoorWebAPI_Uri: http://clay_doorwebapi:8002
+      OcelotParams__Hosts__HistoyWebAPI_Uri: http://clay_historywebapi:8003
+      
+      Logger__Name: Console
+      Logger__Url: https://localhost:9200
 
-  userwebapi:
+
+  clay_userwebapi:
     image: userwebapi:latest
+    container_name: clay_userwebapi
     ports:
-      - 7001:7001
       - 8001:8001
+    environment:
+      ASPNETCORE_URLS: http://+:8001
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__MariaDB: Server=clay_mariadb; Port=3306; Database=ClayUser;User=root;Password=admin;
+      JwtSettings__Key: ahKJhYE@Jj19hh6156771jGJkjsuiqkjwhqwqweqweuqwklk
+      JwtSettings__AccessTokenValidityInMinute: 120
+      JwtSettings__Issuer: https://localhost:7248
+      JwtSettings__Audience: https://localhost:7248
+
+      Logger__Name: Console
+      Logger__Url: https://localhost:9200
+    depends_on:
+      - clay_mariadb
+      - clay_rabbitmq
 
 
-#networks:
-#  cassandra-network:
-#    name: cassandra-network
-#    driver: bridge
+  clay_doorwebapi:
+    image: doorwebapi:latest
+    container_name: clay_doorwebapi
+    ports:
+      - 8002:8002
+    environment:
+      ASPNETCORE_URLS: http://+:8002
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      ConnectionStrings__MariaDB: Server=clay_mariadb; Port=3306; Database=ClayDoor;User=root;Password=admin;
+      
+      RabbitMQ__Hostname: clay_rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      
+      JwtSettings__Key: ahKJhYE@Jj19hh6156771jGJkjsuiqkjwhqwqweqweuqwklk
+      JwtSettings__AccessTokenValidityInMinute: 120
+      JwtSettings__Issuer: https://localhost:7248
+      JwtSettings__Audience: https://localhost:7248
+
+      Logger__Name: Console
+      Logger__Url: https://localhost:9200
+
+      LockHandler__Url: http://localhost:8004/api/Unlock?hardwareid={hardwareid}
+      
+    depends_on:
+      - clay_mariadb
+      - clay_rabbitmq
+
+
+  clay_historywebapi:
+    image: historywebapi:latest
+    container_name: clay_historywebapi
+    ports:
+      - 8003:8003
+    environment:
+      ASPNETCORE_URLS: http://+:8003
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      ConnectionStrings__MariaDB: Server=clay_mariadb; Port=3306; Database=ClayHistory;User=root;Password=admin;
+      
+      RabbitMQ__Hostname: clay_rabbitmq
+      RabbitMQ__Username: guest
+      RabbitMQ__Password: guest
+      
+      Logger__Name: Console
+      Logger__Url: https://localhost:9200
+      
+    depends_on:
+      - clay_mariadb
+      - clay_rabbitmq
+      
+
+  clay_lockhandlerwebapi:
+    image: lockhandlerwebapi:latest
+    container_name: clay_lockhandlerwebapi
+    ports:
+      - 8004:8004
+    environment:
+      ASPNETCORE_URLS: http://+:8004
+      ASPNETCORE_ENVIRONMENT: Development
+      
+      Logger__Name: Console
+      Logger__Url: https://localhost:9200
+      
+       

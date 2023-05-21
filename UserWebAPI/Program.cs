@@ -30,11 +30,24 @@ try
 
     builder.Services.AddDbContext<UserDbContext>(options =>
     {
-        var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
-        options.UseMySql(
-            connectionString,
-            ServerVersion.AutoDetect(connectionString)
-            );
+        bool connected = false;
+
+        while (!connected)
+        {
+            try
+            {
+                var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString)
+                    );
+                connected = true;
+            }
+            catch
+            {
+                Task.Delay(1000);
+            }
+        }
     });
 
     builder.Services.AddTransient<IAuthenticatorService, AuthenticatorService>();

@@ -6,7 +6,7 @@
       "UpstreamPathTemplate": "/api/Door",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -24,7 +24,7 @@
       "UpstreamPathTemplate": "/api/Door/{id}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -40,9 +40,9 @@
     },
     {
       "UpstreamPathTemplate": "/api/Door/Unluck/{doorid}",
-      "UpstreamHttpMethod": [ "Get" ],
+      "UpstreamHttpMethod": [ "Post" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -62,7 +62,7 @@
       "UpstreamPathTemplate": "/api/Permission",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -80,7 +80,7 @@
       "UpstreamPathTemplate": "/api/Permission/{permid}",
       "UpstreamHttpMethod": [ "Get", "Delete" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -98,7 +98,7 @@
       "UpstreamPathTemplate": "/api/Permission/{doorid}/{role}",
       "UpstreamHttpMethod": [ "Delete" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{DoorWebAPI_Uri}"
@@ -118,7 +118,7 @@
       "UpstreamPathTemplate": "/api/Authenticator",
       "UpstreamHttpMethod": [ "Post" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{UserWebAPI_Uri}"
@@ -131,7 +131,7 @@
       "UpstreamPathTemplate": "/api/User",
       "UpstreamHttpMethod": [ "Get", "Post" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{UserWebAPI_Uri}"
@@ -149,7 +149,7 @@
       "UpstreamPathTemplate": "/api/User/{id}",
       "UpstreamHttpMethod": [ "Get", "Put", "Delete" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{UserWebAPI_Uri}"
@@ -169,7 +169,7 @@
       "UpstreamPathTemplate": "/api/History",
       "UpstreamHttpMethod": [ "Get" ],
 
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "{HistoyWebAPI_Uri}"

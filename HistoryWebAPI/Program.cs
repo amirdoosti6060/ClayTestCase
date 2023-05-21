@@ -29,14 +29,30 @@ try
             .Password(builder.Configuration["RabbitMQ:Password"])
             .build()
     );
-    
-    builder.Services.AddHostedService<RabbitListener>();
 
     builder.Services.AddDbContext<HistoryDbContext>(options =>
     {
-        var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
-        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        bool connected = false;
+
+        while (!connected)
+        {
+            try
+            {
+                var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString)
+                    );
+                connected = true;
+            }
+            catch
+            {
+                Task.Delay(1000);
+            }
+        }
     });
+
+    builder.Services.AddHostedService<RabbitListener>();
 
     builder.Services.AddControllers();
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

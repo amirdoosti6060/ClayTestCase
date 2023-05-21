@@ -21,23 +21,24 @@ SOLUTION
 -----------------------------
 ARCHITECTURE
 This project is designed based on microservice architecte and contains following microservices:
-ApiGateway: An API Gateway based on Ocelot package which handler both authentication and authorization*
-UserWebAPI: An API for managing users (CRUD) and provide authentication capabilities.
-DoorWebAPI: An API for managing doors (CRUD) and permission for doors (CRUD) and provide Unlock functionality (Main Goal)
-HistoryWebAPI: An API for persist history of door events and provide an endpoint for querying history
-LockHandlerWebAPI: An API which simulate the door or API of the door 
+ApiGateway: An API Gateway based on Ocelot package which handles both authentication and authorization*
+UserWebAPI: An API for managing users and provide authentication capabilities.
+DoorWebAPI: An API for managing doors and permission for doors and provide Unlock functionality (Main Goal)
+HistoryWebAPI: An API for persisting history of door events and provide an endpoint for querying history
+LockHandlerWebAPI: An API which simulates the door or API of the door 
 
 DATABASE
-For DBMS I'm using MariaDB for all microservices in this project
+For keeping simplicity MariaDB has been used for all microservices but different databases
 
 MESSAGE BROCKER
-I'm using RabbitMQ as message brocker.
+RabbitMQ has been used as message brocker.
 
 ORCHESTRATOR
-I'm using docker compose for orchestration but I'm also started using Kubernetes but there was not enough time to finish.
-Some of Kubernetes files are encluded in Deploy folder.
+Docker compose has been used for orchestration but Kubernetes was in progress to be used.
+Some of Kubernetes files prepared so far are included in Deploy folder. 
+If it's needed, it can be accomplished.
 
 LOGGING
 For logging I used Serilog to write directly in Elasticsearch which is searchable via Kibana.
-But to comply 12 Factorys there are another option which is configurable using environment variable to write
-on STDOUT and the collect it using different solution.
+But to comply 12 Factors application standard, there is another option which is configurable via environment variable to write
+logs on STDOUT and then collect it using Loki/Graffana.

@@ -40,12 +40,24 @@ try
 
     builder.Services.AddDbContext<DoorDbContext>(options =>
     {
-    //var connectionString = Environment.GetEnvironmentVariable("ConnectionString_MariaDB");
-        var connectionString = builder.Configuration.GetConnectionString("MariaDB");
-        options.UseMySql(
-            connectionString,
-            ServerVersion.AutoDetect(connectionString)
-            );
+        bool connected = false;
+
+        while (!connected)
+        {
+            try
+            {
+                var connectionString = builder.Configuration["ConnectionStrings:MariaDB"];
+                options.UseMySql(
+                    connectionString,
+                    ServerVersion.AutoDetect(connectionString)
+                    );
+                connected = true;
+            }
+            catch
+            {
+                Task.Delay(1000);
+            }
+        }
     });
 
     builder.Services.AddSingleton(sp =>

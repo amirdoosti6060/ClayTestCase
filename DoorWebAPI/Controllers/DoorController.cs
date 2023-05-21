@@ -63,7 +63,7 @@ namespace DoorWebAPI.Controllers
             return StatusCode((int)response.Code!, response);
         }
 
-        // POST api/<DoorController>
+        // GET api/<DoorController>
         [HttpGet("Unlock/{doorid:long}")]
         public async Task<IActionResult> Unlock(long doorid)
         {
