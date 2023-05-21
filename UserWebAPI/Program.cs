@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Net;
+using UserWebAPI.Helpers;
 using UserWebAPI.Interfaces;
 using UserWebAPI.Models;
 using UserWebAPI.Services;
@@ -14,14 +15,12 @@ try
 {
     builder.Configuration.AddEnvironmentVariables();
 
-    var logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(builder.Configuration)
-                    .CreateLogger();
     builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog(logger);
+    builder.Logging.AddSerilog(CreateSerilogLogger(builder.Configuration));
 
     // Read JwtSettings from environment
     builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
 
     builder.Services.AddControllers();
 
@@ -71,8 +70,11 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+// Create database
+app.InitiateDatabase();
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -80,9 +82,33 @@ if (app.Environment.IsDevelopment())
 
 // Configure the HTTP request pipeline.
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.MapControllers();
 
 app.Run();
+
+Serilog.Core.Logger CreateSerilogLogger(IConfiguration config)
+{
+    Serilog.Core.Logger logger;
+
+    if (config["Logger:Name"]!.ToLower() == "elasticsearch")
+    {
+        var uri = new Uri(config["Logger:Url"]!);
+
+        logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(config)
+                    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(uri))
+                    .CreateLogger();
+    }
+    else
+    {
+        logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(config)
+                    .WriteTo.Console()
+                    .CreateLogger();
+    }
+
+    return logger;
+}
 

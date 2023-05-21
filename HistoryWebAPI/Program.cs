@@ -1,3 +1,4 @@
+using HistoryWebAPI.Helpers;
 using HistoryWebAPI.Interfaces;
 using HistoryWebAPI.Models;
 using HistoryWebAPI.Services;
@@ -73,14 +74,17 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
+// Create database
+app.InitiateDatabase();
+
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

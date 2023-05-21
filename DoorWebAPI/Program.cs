@@ -1,3 +1,4 @@
+using DoorWebAPI.Helpers;
 using DoorWebAPI.Interfaces;
 using DoorWebAPI.Models;
 using DoorWebAPI.Services;
@@ -49,9 +50,9 @@ try
 
     builder.Services.AddSingleton(sp =>
         new RabbitBusBuilder()
-            .HostName("localhost")
-            .UserName("guest")
-            .Password("guest")
+            .HostName(builder.Configuration["RabbitMQ:Hostname"])
+            .UserName(builder.Configuration["RabbitMQ:Username"])
+            .Password(builder.Configuration["RabbitMQ:Password"])
             .build()
     );
 
@@ -96,36 +97,16 @@ app.UseExceptionHandler(errorApp =>
     });
 });
 
-// Global Exception Handler Middleware
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        context.Response.ContentType = "applicaton/json";
+// Create database
+app.InitiateDatabase();
 
-        var ex = context.Features.Get<IExceptionHandlerFeature>();
-        if (ex != null)
-        {
-            var response = new GeneralResponse
-            {
-                Code = ex.Error.GetType().Name,
-                Message = ex.Error.Message,
-                Data = builder.Environment.IsDevelopment() ? ex.Error : ex.Error.Source
-            };
-
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(response));
-        }
-    });
-});
-
-if (app.Environment.IsDevelopment())
+//if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 

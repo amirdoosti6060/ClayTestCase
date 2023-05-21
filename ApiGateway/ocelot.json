@@ -9,8 +9,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Door",
@@ -28,8 +27,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Door/{id}",
@@ -47,8 +45,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Door/Unlock/{doorid}",
@@ -68,8 +65,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Permission",
@@ -87,8 +83,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Permission/{permid}",
@@ -106,8 +101,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7002
+          "Host": "{DoorWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Permission/{doorid}/{role}",
@@ -127,8 +121,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "{UserWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/Authenticator"
@@ -141,8 +134,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "{UserWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/User",
@@ -160,8 +152,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7001
+          "Host": "{UserWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/User/{id}",
@@ -181,8 +172,7 @@
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 7003
+          "Host": "{HistoyWebAPI_Uri}"
         }
       ],
       "DownstreamPathTemplate": "/api/History",
