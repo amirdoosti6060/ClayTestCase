@@ -1,0 +1,40 @@
+# Use root/example as user/password credentials
+version: '3.9'
+
+services:
+
+#  mariadb1:
+#    image: mariadb
+#    restart: always
+#    ports:
+#      - 3306:3306
+#    environment:
+#      MARIADB_ROOT_PASSWORD: admin
+
+#  rabbitmq1:
+#    image: rabbitmq:3.12.0-rc.1-management
+#    ports:
+#      - 15672:15672
+#      - 5672:5672
+
+  apigateway:
+    image: apigateway
+#    restart: always
+    ports:
+      - 8000:8000
+      - 7000:7000
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
+
+  userwebapi:
+    image: userwebapi:latest
+    ports:
+      - 7001:7001
+      - 8001:8001
+
+
+#networks:
+#  cassandra-network:
+#    name: cassandra-network
+#    driver: bridge

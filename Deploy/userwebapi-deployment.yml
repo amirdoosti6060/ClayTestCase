@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userwebapi-deployment
+  labels:
+    app: userwebapi
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: userwebapi
+  template:
+    metadata:
+      labels:
+        app: userwebapi
+    spec:
+      containers:
+      - name: userwebapi
+        image: amirdoosti/userwebapi:latest
+        ports:
+        - containerPort: 8001
+        env:
+        - name: JwtSettings__Key
+          valueFrom:
+            secretKeyRef:
+              name: userwebapi-secret
+              key: JWT_KEY
+        - name: JwtSettings__AccessTokenValidityInMinute
+          valueFrom:
+            configMapKeyRef:
+              name: userwebapi-configmap
+              key: JWT_TOKEN_VAL
+        - name: JwtSettings__Issuer
+          valueFrom:
+            configMapKeyRef:
+              name: userwebapi-configmap
+              key: JWT_ISSUER
+        - name: JwtSettings__Audience
+          valueFrom:
+            configMapKeyRef:
+              name: userwebapi-configmap
+              key: JWT_AUD
+        - name: ConnectionStrings__MariaDB
+          valueFrom:
+            secretKeyRef:
+              name: userwebapi-secret
+              key: DB_CNN
+      imagePullSecrets:
+      - name: regcred
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userwebapi-service
+spec:
+  selector:
+    app: userwebapi
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 8001
+      targetPort: 8001
+

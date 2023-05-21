@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: claytestcase-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: claytestcase.com
+      http:
+        paths:
+          - path: /userwebapi
+            pathType: Prefix
+            backend:
+              service:
+                name: userwebapi-service
+                port:
+                  number: 8001
