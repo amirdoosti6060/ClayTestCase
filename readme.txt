@@ -39,6 +39,7 @@ Some of Kubernetes files prepared so far are included in Deploy folder.
 If it's needed, it can be accomplished.
 
 LOGGING
-For logging I used Serilog to write directly in Elasticsearch which is searchable via Kibana.
-But to comply 12 Factors application standard, there is another option which is configurable via environment variable to write
-logs on STDOUT and then collect it using Loki/Graffana.
+For logging I used Serilog and provide options to write directly in Elasticsearch which is searchable via Kibana or
+writing directly to STDOUT and then collect it and visualize it using Loki/Graffana.
+These options are configurable via environment variables of each microservices.
+
